@@ -1,5 +1,3 @@
-import React from "react"
-
 function InputText({
   type = "text",
   name = "",
@@ -18,10 +16,11 @@ function InputText({
       <label htmlFor={name}>
         {name[0].toUpperCase() + name.slice(1, name.length)}
       </label>
+      {/* prettier-ignore */}
       <input
         type={type}
         name={name}
-        placeholder={name + "..."}
+        placeholder={props.placeholder || "Enter your " + name + "..."}
         minLength={minLength}
         maxLength={maxLength}
         className={
