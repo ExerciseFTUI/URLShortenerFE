@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 import InputText from "../../components/inputText"
-import HexaParticles from "../../components/hexagon/HexaParticles"
+import HexaParticles from "../../components/hexagonAnim/HexaParticles"
 
 function RegisterPage() {
   const [username, setUsername] = useState("")
@@ -84,7 +84,7 @@ function RegisterPage() {
             className="shadow-sm border-grey-2 border-2"
           />
 
-          <p className="text-xs pl-4 -mt-2 mb-2 italic font-semibold">
+          <p className="text-[#d45d5d] text-xs pl-4 -mt-2 mb-2 italic font-semibold">
             {strong
               ? ""
               : "Password needs to be length of 8 and contain at least one capital letter and one number!"}

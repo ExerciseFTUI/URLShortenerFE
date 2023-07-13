@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 
 import InputText from "../../components/inputText"
-import HexaParticles from "../../components/hexagon/HexaParticles"
+import HexaParticles from "../../components/hexagonAnim/HexaParticles"
 
 function LoginPage() {
   const [username, setUsername] = useState("")
