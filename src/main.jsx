@@ -10,10 +10,29 @@ import LoginPage from "./pages/Login"
 import RegisterPage from "./pages/Register/"
 import ResetPasswordPage from "./pages/ResetPassword"
 
+import QRCodes from "./pages/QRCodes"
+import CustomQR from "./pages/QRCodes/CustomQR"
+import DefaultQR from "./pages/QRCodes/DefaultQR"
+
 const router = createBrowserRouter([
   {
     element: <App />,
-    children: [    ],
+    children: [
+      {
+        path: "/qr-codes",
+        element: <QRCodes />,
+        children: [
+          {
+            path: "default",
+            element: <DefaultQR />,
+          },
+          {
+            path: "custom",
+            element: <CustomQR />,
+          },
+        ],
+      },
+    ],
   },
   {
     path: "/account",

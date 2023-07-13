@@ -38,11 +38,11 @@
 
 @layer components {
     .btn-dark {
-        @apply bg-dark-1 font-bold text-light block w-fit py-1 px-2 hover:tracking-widest ease-in-out duration-200
+        @apply bg-dark-1 font-bold text-light block w-fit py-1 px-2 hover:scale-90 ease-in-out duration-200
     }
 
     .btn-light {
-        @apply bg-light font-bold text-dark-2 block w-fit py-1 px-2 hover:tracking-widest ease-in-out duration-200
+        @apply bg-light font-bold text-dark-2 block w-fit py-1 px-2 hover:scale-90 ease-in-out duration-200
     }
 
     .section-head {
@@ -50,15 +50,15 @@
     }
 
     .w-container {
-        @apply max-w-[1080px] mx-auto
+        @apply max-w-[1280px] mx-auto
     }
 
     .site-wrapper {
-        @apply max-w-7xl px-8
+        @apply max-w-7xl px-4
     }
     
     .flex-center {
-        @apply flex items-center justify-center
+        @apply flex flex-col items-center justify-center
     }
 }
 
