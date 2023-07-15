@@ -1,35 +1,12 @@
-import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 
-import InputText from "../../components/inputText"
 import HexaParticles from "../../components/hexagonAnim/HexaParticles"
+import { ButtonGoogle } from "../../components/button"
 
 function LoginPage() {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [remember, setRemember] = useState(false)
-
-  const [proper, setProper] = useState(false)
-
-  const handleSubmit = (e) => {
-    if (
-      (username.length < 3 && password.length < 8) ||
-      username.length > 20 ||
-      password.length > 20
-    ) {
-      alert("Please enter the correct username and password!")
-      e.preventDefault()
-    } else {
-      /* send login request to the server */
-    }
+  const login = (e) => {
+    // do Google Login
   }
-
-  /* Button disabling */
-  useEffect(() => {
-    if (username.length >= 3 && password.length >= 8) setProper(true)
-    else if (username.length > 20 || password.length > 20) setProper(false)
-    else setProper(false)
-  }, [username, password])
 
   return (
     <div
@@ -43,46 +20,7 @@ function LoginPage() {
         </p>
       </div>
 
-      <form
-        className="text-lg text-grey flex flex-col w-full max-w-lg"
-        onSubmit={handleSubmit}
-      >
-        <InputText name="username" content={username} onChange={setUsername} />
-        <InputText
-          type="password"
-          name="password"
-          content={password}
-          onChange={setPassword}
-          minLength={8}
-        />
-
-        <div className="text-sm flex justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <input
-              placeholder="Remember me"
-              type="checkbox"
-              defaultChecked={username}
-              onChange={(e) => setRemember(e.target.checked)}
-            />
-            <p>Remember me</p>
-          </div>
-
-          <Link
-            to="/account/reset-password"
-            className="italic underline underline-offset-4"
-          >
-            Forgot password?
-          </Link>
-        </div>
-
-        <button
-          type="submit"
-          className="bg-dark-2 text-light text-lg rounded-sm py-3 disabled:bg-dark-1 disabled:text-grey-2 disabled:cursor-not-allowed hover:scale-105 disabled:hover:scale-100 linear duration-75"
-          disabled={!proper}
-        >
-          Sign In
-        </button>
-      </form>
+      <ButtonGoogle theme="light" title="Sign In With Google" onClick={login} />
 
       <p className="text-center text-sm text-grey-1">
         Don't have an account?{" "}
