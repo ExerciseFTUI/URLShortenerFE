@@ -99,7 +99,7 @@ function CustomQR() {
             type="color"
             onChange={(e) => setColor(e.target.value)}
             value={color}
-            className="bg-light border-none w-1/2 cursor-pointer"
+            className="bg-light border-none w-[30%] cursor-pointer"
           />
         </div>
       </form>
