@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import InputText from "../../components/inputText"
-import HexaParticles from "../../components/hexagonAnim/HexaParticles"
+import InputText from "../../components/inputText";
+import HexaParticles from "../../components/hexagonAnim/HexaParticles";
 
 function RegisterPage() {
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [strong, setStrong] = useState(false)
+  const [strong, setStrong] = useState(false);
 
-  const [proper, setProper] = useState(false)
+  const [proper, setProper] = useState(false);
 
   const trackPassword = () => {
     if (
@@ -19,9 +19,9 @@ function RegisterPage() {
       !password.match(/([0-8])/g) ||
       password.length < 8
     )
-      setStrong(false)
-    else setStrong(true)
-  }
+      setStrong(false);
+    else setStrong(true);
+  };
 
   const handleSubmit = (e) => {
     if (
@@ -31,12 +31,12 @@ function RegisterPage() {
       email.length < 13 ||
       !email.includes("@")
     ) {
-      alert("Please enter the correct email, username, and password!")
-      e.preventDefault()
+      alert("Please enter the correct email, username, and password!");
+      e.preventDefault();
     } else {
       /* send sign up request to the server */
     }
-  }
+  };
 
   /* Button disabling */
   /* prettier-ignore */
@@ -51,10 +51,18 @@ function RegisterPage() {
     trackPassword()
   }, [username, password, email])
 
+  //Google handle function
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:5000/auth/google";
+  };
+
   return (
     <div id="sign-up" className="text-grey-2">
       <div className="site-wrapper w-container h-[100vh] flex-center flex-col gap-4">
-        <button className="bg-light text-center rounded-full border-grey-2 border-2 h-12 w-full max-w-lg mb-4 hover:scale-105 linear duration-100">
+        <button
+          onClick={handleGoogleLogin}
+          className="bg-light text-center rounded-full border-grey-2 border-2 h-12 w-full max-w-lg mb-4 hover:scale-105 linear duration-100"
+        >
           Continue with Google
         </button>
 
@@ -109,7 +117,7 @@ function RegisterPage() {
 
       <HexaParticles angle="counter-clockwise" direction="left" />
     </div>
-  )
+  );
 }
 
-export default RegisterPage
+export default RegisterPage;
