@@ -22,9 +22,10 @@ function LoginPage() {
 
       <ButtonGoogle theme="light" title="Sign In With Google" onClick={login} />
 
-      <p className="text-center text-sm text-grey-1">
+      <p className="text-center text-sm text-grey-1 mt-4">
         Don't have an account?{" "}
         <Link
+          onClick={login}
           to="/account/register"
           className="italic underline underline-offset-4"
         >

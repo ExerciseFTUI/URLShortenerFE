@@ -69,7 +69,7 @@ function RegisterPage() {
           />
 
           <>
-            <label className="mt-05" htmlFor="Fakultas">
+            <label className="mb-2" htmlFor="Fakultas">
               Fakultas
             </label>
 
@@ -149,7 +149,7 @@ function RegisterPage() {
             type="submit"
             theme="light"
             title="Sign Up With Google"
-            className="w-full text-dark-2 mt-4 mb-2 shadow-md shadow-grey-2 font-medium"
+            className="w-full text-dark-2 mt-4 mb-3 shadow-md shadow-grey-2 font-medium"
           />
         </form>
 
