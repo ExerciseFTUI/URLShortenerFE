@@ -1,11 +1,21 @@
 import React from 'react'
 import qr from "../../assets/qr-codes.png"
 import pointer from '../../assets/summary/pointer.png'
+import mobileBg from '../../assets/summary/bg1.png'
+import deskBg from '../../assets/summary/bg2.png'
+
 import { useState } from 'react'
 
 const SummaryPage = () => {
 
     const [open, setOpen] = useState(true);
+
+    // State input link
+    const [input, setInput] = useState(
+      {
+        link : "",
+      }
+    )
 
     const menu = [
         "Nama User",
@@ -13,6 +23,19 @@ const SummaryPage = () => {
         "QR Codes",
         "Custom Links"
     ]
+
+    //Handle input drop link
+    const handleInput = (event) => {
+      let name = event.target.link
+      let value = event.target.value
+
+      if(name = "link"){
+        setInput({...input, link : value})
+      }
+    }
+
+    // Responsive bg image
+    const bg = window.innerWidth >= 768 ? deskBg : mobileBg
 
     return (
     <div>
@@ -45,19 +68,22 @@ const SummaryPage = () => {
         
             
         <div 
-        className='section-1 bg-light py-5 mt-0 pt-20 px-3 md:px-8 space-y-6'>
-            <div className='max-md:hidden bg-neutral-200 h-1'></div>
-            <div className='drop-link pt-8 md:pt-14 rounded-sm shadow-md h-96 bg-grey'
+            className='section-1 bg-light py-5 mt-0 pt-20 px-3 md:px-8 space-y-6'
             style={{
-                // backgroundImage: `url(${bg})`
+                backgroundImage: `url(${deskBg})`,
+                backgroundRepeat:"no-repeat",
+                backgroundSize: "contain",
             }}
+        >
+            <div className='max-md:hidden bg-neutral-200 h-1'></div>
+            <div className='drop-link pt-8 md:pt-14 rounded-sm shadow-md h-96 bg-grey-1 md:opacity-70'
             >
                 <p className='text-3xl md:text-3xl lg:text-4xl font-semibold w-3/4 mx-7 md:mx-16 drop-shadow-lg md:drop-shadow-md'>Since the very beginning...</p>
                 
                 <div className='mx-5 mt-10 flex md:justify-center'>
-                    <label className='w-full md:w-3/5'>
-                        <input className='w-full h-9 rounded-sm placeholder:text-grey-1 placeholder:tracking-widest placeholder:text-xs md:placeholder:text-sm' placeholder='   Drop your link here!'/>
-                    </label>
+                    <div className='w-full md:w-3/5'>
+                        <input onChange={ handleInput } type='text' name='link' value={input.link} className='text-dark px-4 w-full h-9 rounded-sm placeholder:text-grey-1 placeholder:tracking-widest placeholder:text-xs md:placeholder:text-sm' placeholder='Drop your link here!'/>
+                    </div>
                     <button className='bg-dark-2 w-24 text-xs md:text-sm rounded-sm tracking-widest'><small>Get URL</small></button>
                 </div>
                 <div className='flex md:justify-center'>
@@ -78,8 +104,14 @@ const SummaryPage = () => {
                 
                 <img src={qr} className='max-md:hidden h-40 mr-5'/>
             </div>
-
-            <div className='section-2 max-md:h-screen bg-dark-2 px-6 lg:px-10 py-10 lg:py-16 shadow-md rounded-sm flex flex-col'>
+        </div>
+        <div className='section-2 px-3 md:px-8 bg-light'
+            style={{
+                backgroundImage: `url(${deskBg})`,
+                backgroundRepeat:"no-repeat",
+                backgroundSize: "contain",
+            }}>
+            <div className=' max-md:h-screen bg-dark-2 md:opacity-80 px-6 lg:px-10 py-10 lg:py-16 shadow-md rounded-sm flex flex-col'>
                 <p className='text-2xl md:text-3xl lg:text-4xl lg:tracking-wider xl:tracking-widest font-semibold mb-5'>Manage Links</p>
                 <p className='text-sm mb-5 tracking-wider lg:hidden'>Create new custom shorten link</p>
                 <div className='bg-light text-dark flex flex-col justify-center py-12 lg:py-24 space-y-4 lg:w-3/5 lg:ml-auto'>
