@@ -1,13 +1,21 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { QRCode } from "react-qrcode-logo"
+import { saveAs } from "file-saver"
 
 import QRInput from "./QRInput"
 
-import qr from "../../assets/qr-codes.png"
+import logo from "../../assets/exe-logo-with-bg.png"
 
 function DefaultQR() {
   const [link, setLink] = useState("")
   const [title, setTitle] = useState("")
+
+  function download() {
+    let imageData = document
+      .getElementById("default-qr-code")
+      .toDataURL("image/png")
+    saveAs(imageData, title)
+  }
 
   return (
     <div
@@ -39,18 +47,28 @@ function DefaultQR() {
       </form>
 
       <div className="text-center flex-center flex-col gap-4">
-        <img alt="qr-codes" src={qr} className="w-64 h-64" />
+        <QRCode
+          value={link}
+          ecLevel="H"
+          enableCORS
+          size={256}
+          logoImage={logo}
+          logoPadding={2}
+          removeQrCodeBehindLogo
+          id="default-qr-code"
+        />
 
         <h1 className="font-medium text-3xl border-dark-2 border-b-2 pb-1 w-full max-w-4xl">
           {title || "Title"}
         </h1>
 
-        <Link
-          to="/qr-codes/default"
+        <button
+          type="button"
           className="btn-light font-medium md:text-lg"
+          onClick={download}
         >
           Download here
-        </Link>
+        </button>
       </div>
     </div>
   )
