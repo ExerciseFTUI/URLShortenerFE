@@ -1,18 +1,27 @@
 import { useRef, useState } from "react"
-import { Link } from "react-router-dom"
+import { QRCode } from "react-qrcode-logo"
+import { saveAs } from "file-saver"
 
 import QRInput from "./QRInput"
 
-import qr from "../../assets/qr-codes.png"
+import logo from "../../assets/exe-logo-with-bg.png"
 
 function CustomQR() {
   const [link, setLink] = useState("")
   const [title, setTitle] = useState("")
-  const [color, setColor] = useState("#0D2734")
-  const [icon, setIcon] = useState(null)
+  const [bgColor, setBgColor] = useState("#FFFFFF")
+  const [QRColor, setQRColor] = useState("#000000")
+  const [icon, setIcon] = useState(logo)
   const [iconName, setIconName] = useState("")
 
   const uploadRef = useRef(null)
+
+  function download() {
+    let imageData = document
+      .getElementById("default-qr-code")
+      .toDataURL("image/png")
+    saveAs(imageData, title)
+  }
 
   function handleUploadIcon(e) {
     let file = e.target.files[0]
@@ -87,36 +96,65 @@ function CustomQR() {
         </div>
 
         <div
-          id="input-custom-color"
+          id="input-bg-color"
           className="border-b-2 border-dark-2 flex justify-between px-4 py-1"
         >
           <p className="font-normal text-grey-2 text-lg">
-            Choose Custom Color [ {color} ]
+            Background [ {bgColor} ]
           </p>
 
           <input
-            title="custom-color"
+            title="bg-color"
             type="color"
-            onChange={(e) => setColor(e.target.value)}
-            value={color}
-            className="bg-light border-none w-1/2 cursor-pointer"
+            onChange={(e) => setBgColor(e.target.value)}
+            value={bgColor}
+            className="bg-light border-none w-[30%] cursor-pointer"
+          />
+        </div>
+
+        <div
+          id="input-qr-color"
+          className="border-b-2 border-dark-2 flex justify-between px-4 py-1"
+        >
+          <p className="font-normal text-grey-2 text-lg">
+            QR Color [ {QRColor} ]
+          </p>
+
+          <input
+            title="qr-color"
+            type="color"
+            onChange={(e) => setQRColor(e.target.value)}
+            value={QRColor}
+            className="bg-light border-none w-[30%] cursor-pointer"
           />
         </div>
       </form>
 
       <div className="text-center flex-center flex-col gap-4">
-        <img alt="qr-codes" src={qr} className="w-64 h-64" />
+        <QRCode
+          value={link}
+          ecLevel="H"
+          enableCORS
+          size={256}
+          bgColor={bgColor}
+          fgColor={QRColor}
+          logoImage={icon}
+          logoPadding={2}
+          removeQrCodeBehindLogo
+          id="default-qr-code"
+        />
 
         <h1 className="font-medium text-3xl border-dark-2 border-b-2 pb-2 w-full max-w-4xl">
           {title || "Title"}
         </h1>
 
-        <Link
-          to="/qr-codes/default"
+        <button
+          type="button"
           className="btn-light font-medium md:text-lg"
+          onClick={download}
         >
           Download here
-        </Link>
+        </button>
       </div>
     </div>
   )
