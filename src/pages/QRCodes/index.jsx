@@ -8,7 +8,7 @@ function QRCodes() {
   return (
     <div
       id="qr-codes-feature-page"
-      className="bg-light text-dark-2 min-h-screen relative mt-20 py-6 px-2 overflow-y-auto"
+      className="bg-light text-dark-2 min-h-screen relative py-6 px-2"
     >
       <div className="site-wrapper w-container h-full py-6 flex flex-col shadow-sm shadow-grey-1">
         <div id="qr-codes-choose" className="self-end">

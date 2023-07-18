@@ -1,113 +1,167 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import Select from "react-select"
 
 import InputText from "../../components/inputText"
 import HexaParticles from "../../components/hexagonAnim/HexaParticles"
 
+import fakultas from "../../assets/list-fakultas"
+import ButtonGoogle from "../../components/button/ButtonGoogle"
+
 function RegisterPage() {
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const fakultasOpt = fakultas.map(({ nama }) => ({
+    value: nama,
+    label: nama,
+  }))
 
-  const [strong, setStrong] = useState(false)
+  const jurusanOpt = fakultas.map(({ jurusan }) =>
+    jurusan.map((j) => ({ value: j, label: j }))
+  )
 
-  const [proper, setProper] = useState(false)
+  const [namaUser, setNamaUser] = useState("")
+  const [namaFakultas, setNamaFakultas] = useState("")
+  const [namaJurusan, setNamaJurusan] = useState("")
 
-  const trackPassword = () => {
-    if (
-      !password.match(/([A-Z])/g) ||
-      !password.match(/([0-8])/g) ||
-      password.length < 8
-    )
-      setStrong(false)
-    else setStrong(true)
+  const [indexFakultas, setIndexFakultas] = useState(-1)
+  const [currentJurusanOpt, setCurrentJurusanOpt] = useState([])
+
+  const fakultasChange = ({ value }) => {
+    setNamaFakultas(value)
   }
 
-  const handleSubmit = (e) => {
-    if (
-      (username.length < 3 && password.length < 8) ||
-      username.length > 20 ||
-      password.length > 20 ||
-      email.length < 13 ||
-      !email.includes("@")
-    ) {
-      alert("Please enter the correct email, username, and password!")
+  const jurusanChange = ({ value }) => {
+    setNamaJurusan(value)
+  }
+
+  const loginGoogle = (e) => {
+    if (namaUser.length < 3 || namaFakultas == "" || namaJurusan == "") {
       e.preventDefault()
+
+      // Give Error
     } else {
-      /* send sign up request to the server */
+      // Login Google
+      // Authorized
+      // Post Data to Backend
     }
   }
 
-  /* Button disabling */
-  /* prettier-ignore */
+  // prettier-ignore
   useEffect(() => {
-    if (username.length >= 3 && password.length >= 8 && email.length >= 13 && email.includes("@"))
-      setProper(true)
-    else if (username.length > 20 || password.length > 20 || email.length < 13 || !email.includes("@"))
-      setProper(false)
-    else 
-      setProper(false)
-
-    trackPassword()
-  }, [username, password, email])
+    setIndexFakultas(fakultasOpt.map(({value}) => value).indexOf(namaFakultas))
+    setCurrentJurusanOpt(jurusanOpt[indexFakultas])
+  }, [namaFakultas, indexFakultas])
 
   return (
     <div id="sign-up" className="text-grey-2">
       <div className="site-wrapper w-container h-[100vh] flex-center flex-col gap-4">
-        <button className="bg-light text-center rounded-full border-grey-2 border-2 h-12 w-full max-w-lg mb-4 hover:scale-105 linear duration-100">
-          Continue with Google
-        </button>
-
         <form
           className="text-lg flex flex-col w-full max-w-lg"
-          onSubmit={handleSubmit}
+          onSubmit={loginGoogle}
         >
           <InputText
-            name="username"
-            content={username}
-            onChange={setUsername}
-            className="shadow-sm border-grey-2 border-2"
-          />
-          <InputText
-            name="email"
-            content={email}
-            onChange={setEmail}
-            maxLength={50}
-            className="shadow-sm border-grey-2 border-2"
-          />
-          <InputText
-            type="password"
-            name="password"
-            content={password}
-            onChange={setPassword}
-            minLength={8}
-            className="shadow-sm border-grey-2 border-2"
+            name="Nama"
+            placeholder="Masukkan Nama Anda"
+            required={true}
+            content={namaUser}
+            onChange={setNamaUser}
+            maxLength={100}
+            minLength={3}
           />
 
-          <p className="text-[#d45d5d] text-xs pl-4 -mt-2 mb-2 italic font-semibold">
-            {strong
-              ? ""
-              : "Password needs to be length of 8 and contain at least one capital letter and one number!"}
-          </p>
+          <>
+            <label className="mb-2" htmlFor="Fakultas">
+              Fakultas
+            </label>
 
-          <button
+            <Select
+              required
+              isSearchable
+              options={fakultasOpt}
+              onChange={fakultasChange}
+              placeholder="Pilih Fakultas Anda"
+              name="Fakultas"
+              styles={{
+                control: (base, state) => ({
+                  // ...base,
+                  borderColor: "none",
+                  background: "#FAFAFA",
+                  display: "flex",
+                  color: "#1C465C",
+                  borderRadius: "2rem",
+                  paddingLeft: "0.5rem",
+                  height: "3rem",
+                  boxShadow: "0 4px 6px -1px #527182, 0 2px 4px -2px #527182",
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  background:
+                    state.isFocused || state.isSelected ? "#527182" : "#FAFAFA",
+                  color:
+                    state.isFocused || state.isSelected ? "#FAFAFA" : "#1C465C",
+                }),
+              }}
+            />
+          </>
+
+          <>
+            <label className="mt-4" htmlFor="Jurusan">
+              Jurusan
+            </label>
+
+            <Select
+              required
+              isDisabled={!currentJurusanOpt ? true : false}
+              isSearchable
+              options={currentJurusanOpt}
+              onInputChange={jurusanChange}
+              placeholder={
+                !currentJurusanOpt
+                  ? "Pilih Fakultas Terlebih Dahulu!"
+                  : "Pilih Jurusan"
+              }
+              name="Jurusan"
+              styles={{
+                control: (base, state) => ({
+                  // ...base,
+                  borderColor: "none",
+                  background: "#FAFAFA",
+                  opacity: state.isDisabled ? "30%" : "100%",
+                  display: "flex",
+                  color: "#1C465C",
+                  borderRadius: "2rem",
+                  margin: "0.5rem 0 1rem",
+                  paddingLeft: "0.5rem",
+                  height: "3rem",
+                  boxShadow: "0 4px 6px -1px #527182, 0 2px 4px -2px #527182",
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  background:
+                    state.isFocused || state.isSelected ? "#527182" : "#FAFAFA",
+                  color:
+                    state.isFocused || state.isSelected ? "#FAFAFA" : "#1C465C",
+                }),
+              }}
+            />
+          </>
+
+          <ButtonGoogle
             type="submit"
-            className="bg-grey-2 border-grey-2 text-light text-lg rounded-sm py-3 my-2 disabled:bg-opacity-0 disabled:text-grey-2 disabled:cursor-not-allowed hover:scale-105 disabled:hover:scale-100 disabled:border-2 linear duration-75"
-            disabled={!proper}
-          >
-            Sign Up
-          </button>
+            theme="light"
+            title="Sign Up With Google"
+            className="w-full text-dark-2 mt-4 mb-3 shadow-md shadow-grey-2 font-medium"
+          />
         </form>
 
-        <p className="text-center text-sm">
+        <p className="text-center text-sm font-medium italic">
           Already have an account?{" "}
           <Link to="/account/login" className="underline underline-offset-4">
             Sign in
           </Link>
         </p>
-      </div>
 
-      <HexaParticles angle="counter-clockwise" direction="left" />
+        <HexaParticles angle="counter-clockwise" direction="left" />
+      </div>
     </div>
   )
 }

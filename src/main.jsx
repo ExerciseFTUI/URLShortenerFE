@@ -22,6 +22,7 @@ import CustomQR from "./pages/QRCodes/CustomQR";
 import DefaultQR from "./pages/QRCodes/DefaultQR";
 
 import Dashboard from "./pages/Testing/dashboard";
+import Summary from "./pages/Summary";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
+    element: <Summary />,
+  },
+  {
+    path: "*",
     element: <Navigate to="/account/login" />,
   },
 ]);
