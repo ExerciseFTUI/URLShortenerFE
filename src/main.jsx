@@ -17,6 +17,7 @@ import ResetPasswordPage from "./pages/ResetPassword";
 import QRCodes from "./pages/QRCodes";
 import CustomQR from "./pages/QRCodes/CustomQR";
 import DefaultQR from "./pages/QRCodes/DefaultQR";
+import Summary from "./pages/Summary";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
+    element: <Summary />,
+  },
+  {
+    path: "*",
     element: <Navigate to="/account/login" />,
   },
 ]);
