@@ -5,7 +5,7 @@ import Select from "react-select"
 import InputText from "../../components/inputText"
 import HexaParticles from "../../components/hexagonAnim/HexaParticles"
 
-import fakultas from "../../assets/list-fakultas"
+import fakultas from "../../assets/data/list-fakultas"
 import ButtonGoogle from "../../components/button/ButtonGoogle"
 
 function RegisterPage() {
