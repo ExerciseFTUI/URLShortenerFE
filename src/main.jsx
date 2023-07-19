@@ -10,6 +10,9 @@ import "./main.css";
 
 import App from "./App";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register/";
 import ResetPasswordPage from "./pages/ResetPassword";
@@ -17,6 +20,9 @@ import ResetPasswordPage from "./pages/ResetPassword";
 import QRCodes from "./pages/QRCodes";
 import CustomQR from "./pages/QRCodes/CustomQR";
 import DefaultQR from "./pages/QRCodes/DefaultQR";
+
+import Dashboard from "./pages/Testing/dashboard";
+import Summary from "./pages/Summary";
 
 const router = createBrowserRouter([
   {
@@ -56,13 +62,31 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/testing",
+    children: [
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+    ],
+  },
+  {
     path: "/",
+    element: <Summary />,
+  },
+  {
+    path: "*",
     element: <Navigate to="/account/login" />,
   },
 ]);
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   </React.StrictMode>
 );
