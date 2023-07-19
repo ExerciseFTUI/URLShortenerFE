@@ -57,7 +57,7 @@ function EditLinkPage() {
           className="mb-8 max-w-4xl"
         />
 
-        <div className="flex gap-2">
+        <div className="w-full flex justify-end gap-4 max-w-4xl">
           <ButtonLink
             theme="light"
             title="Cancel"
