@@ -2,12 +2,12 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+
 import "./main.css"
 
 import App from "./App"
-
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 import LoginPage from "./pages/Login"
 import RegisterPage from "./pages/Register/"
@@ -17,9 +17,12 @@ import QRCodes from "./pages/QRCodes"
 import CustomQR from "./pages/QRCodes/CustomQR"
 import DefaultQR from "./pages/QRCodes/DefaultQR"
 
-import Dashboard from "./pages/Testing/dashboard"
 import Summary from "./pages/Summary"
+
+import EditLinkPage from "./pages/EditLink"
 import HistoryLinkPage from "./pages/HistoryLink"
+
+import Dashboard from "./pages/Testing/dashboard"
 
 const router = createBrowserRouter([
   {
@@ -40,8 +43,12 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/history",
+        path: "/url-shortener/history",
         element: <HistoryLinkPage />,
+      },
+      {
+        path: "/url-shortener/edit-link/:id",
+        element: <EditLinkPage />,
       },
     ],
   },

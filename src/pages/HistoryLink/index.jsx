@@ -86,7 +86,7 @@ function HistoryLinkPage() {
                   <ButtonLink
                     theme="dark"
                     title="Edit"
-                    to={`/url-shortener/edit/${l.id}`}
+                    to={`/url-shortener/edit-link/${l.id}`}
                     className="text-sm py-0.5 px-2"
                   />
                 </div>
