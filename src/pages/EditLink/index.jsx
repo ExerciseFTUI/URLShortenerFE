@@ -61,7 +61,7 @@ function EditLinkPage() {
           <ButtonLink
             theme="light"
             title="Cancel"
-            to="/history"
+            to="/url-shortener/history"
             className="border-2 border-dark-2 px-2 py-0.5"
           />
 
