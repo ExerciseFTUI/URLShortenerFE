@@ -38,7 +38,7 @@ function CustomQR() {
       id="qr-codes-custom"
       className="flex flex-col lg:flex-center lg:items-start lg:flex-row lg:gap-16"
     >
-      <div className="flex-center flex-col gap-4 border-2 border-dark-2 p-4 pb-8 rounded-xl">
+      <div className="bg-light flex-center flex-col gap-4 border-2 border-dark-2 p-4 pb-8 rounded-xl">
         <div className="border-2 border-dark-2 rounded-sm">
           <QRCode
             value={link}

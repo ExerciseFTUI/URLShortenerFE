@@ -24,7 +24,7 @@ function DefaultQR() {
       id="qr-codes-default"
       className="flex-center flex-col lg:flex-row lg:gap-16"
     >
-      <div className="flex-center flex-col-reverse gap-4 border-2 border-dark-2 p-4 pb-8 rounded-xl">
+      <div className="bg-light flex-center flex-col-reverse gap-4 border-2 border-dark-2 p-4 pb-8 rounded-xl">
         <h1 className="font-semibold text-3xl w-fit max-w-4xl pt-2">
           {title || "My QR Code"}
         </h1>
