@@ -62,8 +62,10 @@
     }
 }
 
-@layer utilities {
-    .h-screen {
-        height: calc(100vh - 5rem);
-    }
+#history-link-lists::-webkit-scrollbar {
+    width: 0.2rem;
+}
+
+#history-link-lists::-webkit-scrollbar-thumb {
+    @apply bg-light
 }
