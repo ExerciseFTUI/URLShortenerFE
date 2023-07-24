@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
-import HexaParticles from "../../components/hexagonAnim/HexaParticles"
-import { ButtonGoogle } from "../../components/button"
+import HexaParticles from "../../components/hexagonAnim/HexaParticles";
+import { ButtonGoogle } from "../../components/button";
 
 function LoginPage() {
   const login = (e) => {
     // do Google Login
-  }
+    window.open(`${import.meta.env.VITE_BASE_URL}/auth/google`, "_self");
+  };
 
   return (
     <div
@@ -35,7 +36,7 @@ function LoginPage() {
 
       <HexaParticles background="#0D2734" color="#527182" />
     </div>
-  )
+  );
 }
 
-export default LoginPage
+export default LoginPage;
