@@ -218,7 +218,7 @@ function CustomQR() {
         <button
           type="button"
           className="btn-dark font-medium rounded-md md:text-lg"
-          onClick={handleAddQr}
+          onClick={download}
         >
           Download
         </button>
