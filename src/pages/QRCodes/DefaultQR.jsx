@@ -1,22 +1,61 @@
-import { useState } from "react"
-import { QRCode } from "react-qrcode-logo"
-import { saveAs } from "file-saver"
+import { useState } from "react";
+import { QRCode } from "react-qrcode-logo";
+import { saveAs } from "file-saver";
 
-import QRInput from "./QRInput"
+import QRInput from "./QRInput";
 
-import logo from "../../assets/exe-logo-with-bg.png"
+import logo from "../../assets/exe-logo-with-bg.png";
+//React Query
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+//API
+import { apiAddQr } from "../../utils";
+//React-Toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DefaultQR() {
-  const [link, setLink] = useState("")
-  const [title, setTitle] = useState("")
+  const queryClient = useQueryClient();
+
+  const [link, setLink] = useState("");
+  const [title, setTitle] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const userId = sessionStorage.getItem("userId");
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      apiAddQr(
+        null, //File field didnt exist
+        userId,
+        link, // Use the 'link' state
+        title, // Use the 'title' state
+        null //Custom Color field didnt exist
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["getQrByUser", userId]);
+      setTitle("");
+      setLink("");
+      setErrorMessage("");
+
+      toast.success("Your QR Code has been successfully generated");
+    },
+    onError: (error) => {
+      setErrorMessage(error.response.data.message);
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleAddQr = () => {
+    mutation.mutate();
+  };
 
   function download() {
-    if (link.length == 0) return
+    if (link.length == 0) return;
 
     let imageData = document
       .getElementById("default-qr-code")
-      .toDataURL("image/png")
-    saveAs(imageData, title)
+      .toDataURL("image/png");
+    saveAs(imageData, title);
   }
 
   return (
@@ -70,8 +109,20 @@ function DefaultQR() {
           Download
         </button>
       </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
-  )
+  );
 }
 
-export default DefaultQR
+export default DefaultQR;

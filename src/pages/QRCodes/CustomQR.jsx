@@ -1,36 +1,88 @@
-import { useRef, useState } from "react"
-import { QRCode } from "react-qrcode-logo"
-import { saveAs } from "file-saver"
+import { useRef, useState } from "react";
+import { QRCode } from "react-qrcode-logo";
+import { saveAs } from "file-saver";
 
-import QRInput from "./QRInput"
+import QRInput from "./QRInput";
 
-import logo from "../../assets/exe-logo-with-bg.png"
+import logo from "../../assets/exe-logo-with-bg.png";
+
+//React Query
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+//API
+import { apiAddQr } from "../../utils";
+//React-Toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CustomQR() {
-  const [link, setLink] = useState("")
-  const [title, setTitle] = useState("")
-  const [bgColor, setBgColor] = useState("#FFFFFF")
-  const [QRColor, setQRColor] = useState("#000000")
-  const [icon, setIcon] = useState(logo)
-  const [iconName, setIconName] = useState("")
+  const [link, setLink] = useState("");
+  const [title, setTitle] = useState("");
+  const [bgColor, setBgColor] = useState("#FFFFFF");
+  const [QRColor, setQRColor] = useState("#000000");
+  const [icon, setIcon] = useState(logo);
+  const [iconName, setIconName] = useState("");
 
-  const uploadRef = useRef(null)
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const queryClient = useQueryClient();
+  const userId = sessionStorage.getItem("userId");
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      apiAddQr(
+        selectedFile, //File field
+        userId,
+        link, // Use the 'link' state
+        title, // Use the 'title' state
+        QRColor //Custom Color field
+      ),
+    onSuccess: () => {
+      //Refetch
+      queryClient.invalidateQueries(["getQrByUser", userId]);
+
+      //Reset states value
+      // setTitle("");
+      // setLink("");
+      // setQRColor("");
+      // setBgColor("");
+
+      setErrorMessage("");
+
+      //Display Toast
+      toast.success("Your QR Code has been successfully generated");
+    },
+    onError: (error) => {
+      setErrorMessage(error.response.data.message);
+
+      //Display Toast
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleAddQr = () => {
+    mutation.mutate();
+  };
+
+  const uploadRef = useRef(null);
 
   function download() {
-    if (link.length == 0) return
+    if (link.length == 0) return;
 
     let imageData = document
       .getElementById("default-qr-code")
-      .toDataURL("image/png")
-    saveAs(imageData, title)
+      .toDataURL("image/png");
+    saveAs(imageData, title);
   }
 
   function handleUploadIcon(e) {
-    let file = e.target.files[0]
+    let file = e.target.files[0];
 
-    file && setIconName(file.name)
+    file && setIconName(file.name);
 
-    file && setIcon(URL.createObjectURL(file))
+    file && setIcon(URL.createObjectURL(file));
+
+    file && setSelectedFile(file);
   }
 
   return (
@@ -166,13 +218,25 @@ function CustomQR() {
         <button
           type="button"
           className="btn-dark font-medium rounded-md md:text-lg"
-          onClick={download}
+          onClick={handleAddQr}
         >
           Download
         </button>
       </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
-  )
+  );
 }
 
-export default CustomQR
+export default CustomQR;

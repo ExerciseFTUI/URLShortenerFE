@@ -2,16 +2,15 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiPostShorten, apiGetAllLinks } from "./api/posts";
 
-const isValidUrl = urlString => {
+const isValidUrl = (urlString) => {
   let url;
-  try { 
-        url =new URL(urlString); 
-    }
-    catch(e){ 
-      return false; 
-    }
-    return url.protocol === "http:" || url.protocol === "https:";
-}
+  try {
+    url = new URL(urlString);
+  } catch (e) {
+    return false;
+  }
+  return url.protocol === "http:" || url.protocol === "https:";
+};
 
 function dashboard() {
   const queryClient = useQueryClient();
@@ -21,7 +20,7 @@ function dashboard() {
     user_id: userId,
     full_url: "",
     short_url: "",
-  }
+  };
 
   const postQuery = useQuery({
     queryKey: ["getAll", userId],
@@ -30,21 +29,21 @@ function dashboard() {
 
   const postMutation = useMutation((params) => apiPostShorten(params), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['getAll', userId]);
+      queryClient.invalidateQueries(["getAll", userId]);
     },
   });
 
   const handlePost = async () => {
     if (isValidUrl(shortURL.full_url)) {
       console.log(shortURL);
-    }else {
+    } else {
       alert("Invalid URL");
-      return
+      return;
     }
     try {
       await postMutation.mutateAsync(shortURL);
     } catch (error) {
-      console.error('An error occurred:', error);
+      console.error("An error occurred:", error);
     }
   };
 
@@ -52,7 +51,8 @@ function dashboard() {
   if (postQuery.isError) return <h1>{JSON.stringify(postQuery.error)}</h1>;
 
   if (postMutation.isLoading) return <h1>Loading...</h1>;
-  if (postMutation.isError) return <h1>{JSON.stringify(postMutation.error)}</h1>;
+  if (postMutation.isError)
+    return <h1>{JSON.stringify(postMutation.error)}</h1>;
   return (
     <>
       <div className="mx-20">
@@ -83,7 +83,12 @@ function dashboard() {
               className="input input-bordered w-full max-w-xs rounded-xl pl-2 text-[#000000] h-10"
             />
           </div>
-          <button className="btn bg-grey rounded-3xl h-10 w-20 mb-8 hover:bg-grey-2" onClick={handlePost}>Submit</button>
+          <button
+            className="btn bg-grey rounded-3xl h-10 w-20 mb-8 hover:bg-grey-2"
+            onClick={handlePost}
+          >
+            Submit
+          </button>
           <div className="overflow-x-auto bg-grey-1 rounded-3xl p-4">
             <table className="table table-zebra">
               <thead>
