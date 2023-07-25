@@ -1,19 +1,25 @@
 import React from "react"
-import { Outlet, ScrollRestoration } from "react-router-dom"
+import {
+  Navigate,
+  Outlet,
+  ScrollRestoration,
+  useLocation,
+} from "react-router-dom"
 
-// import NavBar from "./components/NavBar"
-// import Footer from "./components/Footer"
+import Sidebar from "./components/sidebar"
 
 function App() {
+  if (useLocation().pathname == "/") {
+    return <Navigate to="/summary" />
+  }
+
   return (
     <>
       <ScrollRestoration />
 
-      {/* <NavBar /> */}
-
       <Outlet />
 
-      {/* <Footer /> */}
+      <Sidebar />
     </>
   )
 }
