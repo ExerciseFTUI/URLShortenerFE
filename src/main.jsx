@@ -21,6 +21,7 @@ import Summary from "./pages/Summary"
 
 import EditLinkPage from "./pages/EditLink"
 import HistoryLinkPage from "./pages/HistoryLink"
+import URLShortenerPage from "./pages/URLShortener"
 
 import Dashboard from "./pages/Testing/dashboard"
 import { QrDashboard } from "./pages/Testing/qrDashboard"
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
           {
             path: "history",
             element: <HistoryLinkPage />,
+          },
+          {
+            path: "create",
+            element: <URLShortenerPage />,
           },
           {
             path: "edit-link/:id",
