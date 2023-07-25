@@ -1,47 +1,66 @@
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import Select from "react-select"
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Select from "react-select";
 
-import InputText from "../../../components/inputText"
-import HexaParticles from "../../../components/hexagonAnim/HexaParticles"
+import InputText from "../../../components/inputText";
+import HexaParticles from "../../../components/hexagonAnim/HexaParticles";
 
-import fakultas from "../../../assets/data/list-fakultas"
-import ButtonGoogle from "../../../components/button/ButtonGoogle"
+import fakultas from "../../../assets/data/list-fakultas";
+import ButtonGoogle from "../../../components/button/ButtonGoogle";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiUpdateUser } from "../../../utils";
 
 function RegisterPage() {
+  const queryClient = useQueryClient();
+  const userId = sessionStorage.getItem("userId");
+  const navigate = useNavigate();
+
   const fakultasOpt = fakultas.map(({ nama }) => ({
     value: nama,
     label: nama,
-  }))
+  }));
 
   const jurusanOpt = fakultas.map(({ jurusan }) =>
     jurusan.map((j) => ({ value: j, label: j }))
-  )
+  );
 
-  const [namaUser, setNamaUser] = useState("")
-  const [namaFakultas, setNamaFakultas] = useState("")
-  const [namaJurusan, setNamaJurusan] = useState("")
+  const [namaUser, setNamaUser] = useState("");
+  const [namaFakultas, setNamaFakultas] = useState("");
+  const [namaJurusan, setNamaJurusan] = useState("");
 
-  const [indexFakultas, setIndexFakultas] = useState(-1)
-  const [currentJurusanOpt, setCurrentJurusanOpt] = useState([])
+  const [indexFakultas, setIndexFakultas] = useState(-1);
+  const [currentJurusanOpt, setCurrentJurusanOpt] = useState([]);
 
   const fakultasChange = ({ value }) => {
-    setNamaFakultas(value)
-  }
+    setNamaFakultas(value);
+  };
 
   const jurusanChange = ({ value }) => {
-    setNamaJurusan(value)
-  }
+    setNamaJurusan(value);
+  };
 
   const loginGoogle = (e) => {
-    if (namaUser.length < 3 || namaFakultas == "" || namaJurusan == "") {
-      e.preventDefault()
+    e.preventDefault();
 
+    if (namaUser.length < 3 || namaFakultas == "" || namaJurusan == "") {
       // Give Error
     } else {
       // POST data to database
+      const userData = {
+        fakultas: namaFakultas,
+        jurusan: namaJurusan,
+      };
+
+      mutation.mutate(userData);
     }
-  }
+  };
+
+  const mutation = useMutation({
+    mutationFn: (userData) => apiUpdateUser(userId, userData),
+    onSuccess: () => {
+      navigate("/");
+    },
+  });
 
   // prettier-ignore
   useEffect(() => {
@@ -113,7 +132,7 @@ function RegisterPage() {
               isDisabled={!currentJurusanOpt ? true : false}
               isSearchable
               options={currentJurusanOpt}
-              onInputChange={jurusanChange}
+              onChange={jurusanChange}
               placeholder={
                 !currentJurusanOpt
                   ? "Pilih Fakultas Terlebih Dahulu!"
@@ -158,7 +177,7 @@ function RegisterPage() {
         <HexaParticles angle="counter-clockwise" direction="left" />
       </div>
     </div>
-  )
+  );
 }
 
-export default RegisterPage
+export default RegisterPage;

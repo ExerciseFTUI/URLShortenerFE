@@ -1,45 +1,55 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import { QRCode } from "react-qrcode-logo"
-import { useQueryClient, useQuery } from "@tanstack/react-query"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { QRCode } from "react-qrcode-logo";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 
-import HexaParticles from "../../components/hexagonAnim/HexaParticles"
+import HexaParticles from "../../components/hexagonAnim/HexaParticles";
 
-import logo from "../../assets/exe-logo-with-bg.png"
+import logo from "../../assets/exe-logo-with-bg.png";
+import { apiGetQr, apiGetUserData } from "../../utils";
 
 const SummaryPage = () => {
-  const [link, setLink] = useState("")
-  const queryClient = useQueryClient()
+  const [link, setLink] = useState("");
+  const queryClient = useQueryClient();
+
+  const navigate = useNavigate();
 
   //Get user data
   const userQuery = useQuery({
     queryKey: ["getUserData"],
     queryFn: () => apiGetUserData(),
-  })
+  });
 
   //User Data
-  const user = userQuery.data?.user
+  const user = userQuery.data?.user;
 
   //After that get user qr codes
   const qrQuery = useQuery({
     queryKey: ["getQrByUser", userQuery.data?.user._id],
     queryFn: () => apiGetQr(userQuery.data?.user._id),
-    enabled: !!userQuery.data,
-  })
+    enabled: !!userQuery,
+  });
 
   //User Qr Codes
-  const userQr = qrQuery.data?.payload
+  const userQr = qrQuery.data?.payload;
 
   function shortenLink(e) {
     if (link.length == 0) {
-      e.preventDefault()
-      return
+      e.preventDefault();
+      return;
     }
   }
 
   if (userQuery.isSuccess) {
-    // sessionStorage.setItem("userId", userQuery.data.user._id);
-    // sessionStorage.setItem("name", userQuery.data.user.name);
+    sessionStorage.setItem("userId", userQuery.data.user._id);
+    sessionStorage.setItem("name", userQuery.data.user.name);
+
+    //Check if user already fill the data
+    !userQuery.data.user.universitas && navigate("/account/fill-data");
+  }
+
+  if (qrQuery.isSuccess) {
+    console.log(qrQuery.data);
   }
 
   return (
@@ -127,7 +137,7 @@ const SummaryPage = () => {
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SummaryPage
+export default SummaryPage;

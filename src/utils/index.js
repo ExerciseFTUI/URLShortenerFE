@@ -1,16 +1,24 @@
-import axios from "axios"
+import axios from "axios";
 
 export async function apiGetUserData() {
   const { data } = await axios.get(
     `${import.meta.env.VITE_BASE_URL}/auth/login/success`,
     { withCredentials: true }
-  )
+  );
 
-  return data
+  return data;
+}
+
+export async function apiUpdateUser(userId, updatedData) {
+  const { data } = await axios.put(
+    `${import.meta.env.VITE_BASE_URL}/updateUser/${userId}`,
+    updatedData
+  );
+  return data;
 }
 
 export async function apiAddQr(file, userId, url, title, customColor) {
-  const formData = new FormData()
+  const formData = new FormData();
 
   const fieldsToAppend = [
     { name: "userId", value: userId },
@@ -18,15 +26,15 @@ export async function apiAddQr(file, userId, url, title, customColor) {
     { name: "filename", value: file },
     { name: "title", value: title },
     { name: "customColor", value: customColor },
-  ]
+  ];
 
   for (const { name, value } of fieldsToAppend) {
     if (value) {
-      formData.append(name, value)
+      formData.append(name, value);
     }
   }
 
-  console.log(formData)
+  console.log(formData);
 
   // Call API
   const { data } = await axios.post(
@@ -37,21 +45,21 @@ export async function apiAddQr(file, userId, url, title, customColor) {
         "Content-Type": "multipart/form-data",
       },
     }
-  )
+  );
 
-  return
+  return;
 }
 
 export async function apiGetQr(user_id) {
   return axios
     .get(`${import.meta.env.VITE_BASE_URL}/qr/getQrByUserId/${user_id}`)
-    .then((res) => res.data)
+    .then((res) => res.data);
 }
 
 export async function apiGetSingleQr(qr_id) {
   return axios
     .get(`${import.meta.env.VITE_BASE_URL}/qr/getSingleQr/${qr_id}`)
-    .then((res) => res.data)
+    .then((res) => res.data);
 }
 
 export async function apiAddLinkShortener(
