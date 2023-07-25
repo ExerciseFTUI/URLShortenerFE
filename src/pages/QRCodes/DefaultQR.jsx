@@ -33,8 +33,8 @@ function DefaultQR() {
       ),
     onSuccess: () => {
       queryClient.invalidateQueries(["getQrByUser", userId]);
-      setTitle("");
-      setLink("");
+      // setTitle("");
+      // setLink("");
       setErrorMessage("");
 
       toast.success("Your QR Code has been successfully generated");
@@ -47,6 +47,7 @@ function DefaultQR() {
 
   const handleAddQr = () => {
     mutation.mutate();
+    download();
   };
 
   function download() {
@@ -104,11 +105,12 @@ function DefaultQR() {
         <button
           type="button"
           className="btn-dark font-medium rounded-md md:text-lg"
-          onClick={download}
+          onClick={handleAddQr}
         >
           Download
         </button>
       </form>
+
       <ToastContainer
         position="top-right"
         autoClose={2000}

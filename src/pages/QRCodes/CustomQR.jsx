@@ -62,11 +62,13 @@ function CustomQR() {
 
   const handleAddQr = () => {
     mutation.mutate();
+    download();
   };
 
   const uploadRef = useRef(null);
 
   function download() {
+    //Post Qr Code to the database
     if (link.length == 0) return;
 
     let imageData = document
@@ -218,7 +220,7 @@ function CustomQR() {
         <button
           type="button"
           className="btn-dark font-medium rounded-md md:text-lg"
-          onClick={download}
+          onClick={handleAddQr}
         >
           Download
         </button>

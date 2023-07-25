@@ -9,6 +9,14 @@ export async function apiGetUserData() {
   return data;
 }
 
+export async function apiUpdateUser(userId, updatedData) {
+  const { data } = await axios.put(
+    `${import.meta.env.VITE_BASE_URL}/updateUser/${userId}`,
+    updatedData
+  );
+  return data;
+}
+
 export async function apiAddQr(file, userId, url, title, customColor) {
   const formData = new FormData();
 
@@ -52,4 +60,14 @@ export async function apiGetSingleQr(qr_id) {
   return axios
     .get(`${import.meta.env.VITE_BASE_URL}/qr/getSingleQr/${qr_id}`)
     .then((res) => res.data);
+}
+
+export async function apiAddLinkShortener(
+  destinationLink = "",
+  title = "",
+  custom = ""
+) {
+  // if custom provided
+  //    Check if custom available
+  // else generate random id (?)
 }
