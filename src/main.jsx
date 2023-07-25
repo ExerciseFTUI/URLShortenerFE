@@ -23,6 +23,7 @@ import EditLinkPage from "./pages/EditLink"
 import HistoryLinkPage from "./pages/HistoryLink"
 
 import Dashboard from "./pages/Testing/dashboard"
+import { QrDashboard } from "./pages/Testing/qrDashboard"
 
 const router = createBrowserRouter([
   {
@@ -85,6 +86,10 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "QrDashboard",
+        element: <QrDashboard />,
       },
     ],
   },

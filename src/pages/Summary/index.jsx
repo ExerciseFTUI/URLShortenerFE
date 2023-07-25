@@ -8,14 +8,40 @@ import logo from "../../assets/exe-logo-with-bg.png"
 
 const SummaryPage = () => {
   const [link, setLink] = useState("")
+  const queryClient = useQueryClient();
+
+  //Get user data
+  const userQuery = useQuery({
+    queryKey: ["getUserData"],
+    queryFn: () => apiGetUserData(),
+  });
+
+  //User Data
+  const user = userQuery.data?.user;
+
+  //After that get user qr codes
+  const qrQuery = useQuery({
+    queryKey: ["getQrByUser", userQuery.data?.user._id],
+    queryFn: () => apiGetQr(userQuery.data?.user._id),
+    enabled: !!userQuery.data,
+  });
+
+  //User Qr Codes
+  const userQr = qrQuery.data?.payload;
 
   function shortenLink(e) {
     if (link.length == 0) {
       e.preventDefault()
       return
     }
+  };
 
-    // DO URL Shortening
+  // DO URL Shortening
+};
+
+  if (userQuery.isSuccess) {
+    // sessionStorage.setItem("userId", userQuery.data.user._id);
+    // sessionStorage.setItem("name", userQuery.data.user.name);
   }
 
   return (
@@ -103,6 +129,7 @@ const SummaryPage = () => {
         </Link>
       </div>
     </div>
+    
   )
 }
 
