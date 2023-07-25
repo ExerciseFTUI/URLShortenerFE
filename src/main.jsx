@@ -9,9 +9,9 @@ import "./main.css"
 
 import App from "./App"
 
-import LoginPage from "./pages/Login"
-import RegisterPage from "./pages/Register/"
-import ResetPasswordPage from "./pages/ResetPassword"
+import LoginPage from "./pages/Accounts/Login"
+import FillData from "./pages/Accounts/FillData"
+import ResetPasswordPage from "./pages/Accounts/ResetPassword"
 
 import QRCodes from "./pages/QRCodes"
 import CustomQR from "./pages/QRCodes/CustomQR"
@@ -27,9 +27,14 @@ import Dashboard from "./pages/Testing/dashboard"
 const router = createBrowserRouter([
   {
     element: <App />,
+    path: "",
     children: [
       {
-        path: "/qr-codes",
+        path: "summary",
+        element: <Summary />,
+      },
+      {
+        path: "qr-codes",
         element: <QRCodes />,
         children: [
           {
@@ -43,12 +48,17 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/url-shortener/history",
-        element: <HistoryLinkPage />,
-      },
-      {
-        path: "/url-shortener/edit-link/:id",
-        element: <EditLinkPage />,
+        path: "/url-shortener",
+        children: [
+          {
+            path: "history",
+            element: <HistoryLinkPage />,
+          },
+          {
+            path: "edit-link/:id",
+            element: <EditLinkPage />,
+          },
+        ],
       },
     ],
   },
@@ -60,8 +70,8 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "register",
-        element: <RegisterPage />,
+        path: "fill-data",
+        element: <FillData />,
       },
       {
         path: "reset-password",
@@ -77,10 +87,6 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
     ],
-  },
-  {
-    path: "/",
-    element: <Summary />,
   },
   {
     path: "*",
