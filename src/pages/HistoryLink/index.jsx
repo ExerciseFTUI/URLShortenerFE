@@ -23,10 +23,12 @@ function HistoryLinkPage() {
   const [links, setLinks] = useState([])
 
   useEffect(() => {
+    // GET LINKs from database
     setLinks(dummyLinks)
   }, [])
 
   function deleteLink() {
+    // POST DELETE request to backend
     return
   }
 
