@@ -1,15 +1,13 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 
 const navs = [
   { text: "History Links", to: "/url-shortener/history", path: "history" },
-  { text: "Custom Links", to: "/custom-links", path: "custom-links" },
+  { text: "Custom Links", to: "/url-shortener/create", path: "create" },
   { text: "QR Codes", to: "/qr-codes/default", path: "qr-codes" },
 ]
 
 function Sidebar() {
-  const sidebarRef = useRef(null)
-
   const location = useLocation().pathname.split("/")
 
   const [opened, setOpened] = useState(false)
@@ -21,7 +19,6 @@ function Sidebar() {
   // prettier-ignore
   return (
     <aside
-      ref={sidebarRef}
       id="sidebar"
       className={`bg-dark-1 text-lg fixed top-0 h-full px-8 py-16 flex flex-col justify-between z-20 border-grey-2 border-r-2 ease-in-out duration-500 ${opened ? "left-0" : "-left-[184px]"}`}
     >
