@@ -1,11 +1,17 @@
-import { Link } from "react-router-dom"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
-import HexaParticles from "../../components/hexagonAnim/HexaParticles"
-import { ButtonGoogle } from "../../components/button"
+import { ButtonGoogle } from "../../../components/button"
+import HexaParticles from "../../../components/hexagonAnim/HexaParticles"
 
 function LoginPage() {
-  const login = (e) => {
-    // do Google Login
+  const [firstTime, setFirstTime] = useState(false)
+
+  function login() {
+    // Send request for Google Login
+    if (firstTime) {
+      useNavigate("/account/fill-data")
+    }
   }
 
   return (
@@ -21,17 +27,6 @@ function LoginPage() {
       </div>
 
       <ButtonGoogle theme="light" title="Sign In With Google" onClick={login} />
-
-      <p className="text-center text-sm text-grey-1 mt-4">
-        Don't have an account?{" "}
-        <Link
-          onClick={login}
-          to="/account/register"
-          className="italic underline underline-offset-4"
-        >
-          Sign up!
-        </Link>
-      </p>
 
       <HexaParticles background="#0D2734" color="#527182" />
     </div>
