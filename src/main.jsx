@@ -9,9 +9,9 @@ import "./main.css"
 
 import App from "./App"
 
-import LoginPage from "./pages/Login"
-import RegisterPage from "./pages/Register/"
-import ResetPasswordPage from "./pages/ResetPassword"
+import LoginPage from "./pages/Accounts/Login"
+import FillData from "./pages/Accounts/FillData"
+import ResetPasswordPage from "./pages/Accounts/ResetPassword"
 
 import QRCodes from "./pages/QRCodes"
 import CustomQR from "./pages/QRCodes/CustomQR"
@@ -21,15 +21,22 @@ import Summary from "./pages/Summary"
 
 import EditLinkPage from "./pages/EditLink"
 import HistoryLinkPage from "./pages/HistoryLink"
+import URLShortenerPage from "./pages/URLShortener"
 
 import Dashboard from "./pages/Testing/dashboard"
+import { QrDashboard } from "./pages/Testing/qrDashboard"
 
 const router = createBrowserRouter([
   {
     element: <App />,
+    path: "",
     children: [
       {
-        path: "/qr-codes",
+        path: "summary",
+        element: <Summary />,
+      },
+      {
+        path: "qr-codes",
         element: <QRCodes />,
         children: [
           {
@@ -43,12 +50,21 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/url-shortener/history",
-        element: <HistoryLinkPage />,
-      },
-      {
-        path: "/url-shortener/edit-link/:id",
-        element: <EditLinkPage />,
+        path: "/url-shortener",
+        children: [
+          {
+            path: "history",
+            element: <HistoryLinkPage />,
+          },
+          {
+            path: "create",
+            element: <URLShortenerPage />,
+          },
+          {
+            path: "edit-link/:id",
+            element: <EditLinkPage />,
+          },
+        ],
       },
     ],
   },
@@ -60,8 +76,8 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "register",
-        element: <RegisterPage />,
+        path: "fill-data",
+        element: <FillData />,
       },
       {
         path: "reset-password",
@@ -76,11 +92,11 @@ const router = createBrowserRouter([
         path: "dashboard",
         element: <Dashboard />,
       },
+      {
+        path: "QrDashboard",
+        element: <QrDashboard />,
+      },
     ],
-  },
-  {
-    path: "/",
-    element: <Summary />,
   },
   {
     path: "*",

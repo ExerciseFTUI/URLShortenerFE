@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 
-import HexaParticles from "../../components/hexagonAnim/HexaParticles"
+import HexaParticles from "../../../components/hexagonAnim/HexaParticles"
 
 function ResetPasswordPage() {
   const [email, setEmail] = useState("")
