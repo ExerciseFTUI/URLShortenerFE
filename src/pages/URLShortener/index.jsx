@@ -6,15 +6,71 @@ import QRInput from "../QRCodes/QRInput"
 import bgImage from "../../assets/backgrounds/hexa-history.png"
 import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
 
-import { apiAddLinkShortener } from "../../utils"
+import { apiPostShorten } from "../../utils"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { ToastContainer, toast } from "react-toastify"
 
 function URLShortenerPage() {
   const [destinationLink, setDestinationLink] = useState("")
   const [title, setTitle] = useState("")
   const [custom, setCustom] = useState("")
 
-  function shortenLink(e) {
-    const available = apiAddLinkShortener(destinationLink, title, custom)
+  const queryClient = useQueryClient();
+  const userId = "649c77d4bb81532d5f46f49b";
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      apiPostShorten(
+        {
+          user_id: userId,
+          full_url: destinationLink,
+          short_url: custom,
+        }
+      ),
+    onSuccess: () => {
+      // queryClient.invalidateQueries(["getAll", userId]);
+      toast.success("Your short url has been successfully generated", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setTimeout(() => {window.location.href = "/url-shortener/history"}, 1000);
+    },
+    onError: (error) => {
+      toast.warn("Failed to generate short url", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setTimeout(() => {}, 3000);
+    },
+  });
+
+  const shortenLink = () => {
+    if (isValidUrl(destinationLink)) {
+        mutation.mutate();
+    } else {
+        toast.warn("Invalid destination url", {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+    }
   }
 
   return (
@@ -26,7 +82,7 @@ function URLShortenerPage() {
 
       <p className="text-lg mb-8">Create New Custom Shorten Link</p>
 
-      <form onSubmit={shortenLink} className="flex flex-col mb-8 lg:w-[540px]">
+      <form className="flex flex-col mb-8 lg:w-[540px]">
         <QRInput
           placeholder="Destination link here"
           value={destinationLink}
@@ -37,7 +93,7 @@ function URLShortenerPage() {
         />
 
         <QRInput
-          placeholder="Custom Link"
+          placeholder="Custom Link (optional)"
           value={custom}
           onChange={setCustom}
           className="w-full mb-6"
@@ -73,7 +129,8 @@ function URLShortenerPage() {
         <button
           title="submit-link"
           name="submit-link"
-          type="submit"
+          type="button"
+          onClick={shortenLink}
           className="btn-dark rounded-md self-end mt-4"
         >
           Create Link
@@ -93,8 +150,30 @@ function URLShortenerPage() {
           className="absolute w-full h-screen object-cover left-0 top-0 pointer-events-none md:hidden"
         />
       </>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   )
 }
 
 export default URLShortenerPage
+
+function isValidUrl(urlString){
+  let url;
+  try {
+    url = new URL(urlString);
+  } catch (e) {
+    return false;
+  }
+  return url.protocol === "http:" || url.protocol === "https:";
+};

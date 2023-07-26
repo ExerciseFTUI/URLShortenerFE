@@ -1,14 +1,3 @@
-<<<<<<< HEAD:src/pages/Login/index.jsx
-import { Link } from "react-router-dom";
-
-import HexaParticles from "../../components/hexagonAnim/HexaParticles";
-import { ButtonGoogle } from "../../components/button";
-
-function LoginPage() {
-  const login = (e) => {
-    window.location.href = `${import.meta.env.VITE_BASE_URL}/auth/google`;
-  };
-=======
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -25,7 +14,6 @@ function LoginPage() {
       useNavigate("/account/fill-data");
     }
   }
->>>>>>> bb9fe9638d4a0e3213f6fdfa2301fcb99781bbd7:src/pages/Accounts/Login/index.jsx
 
   return (
     <div
