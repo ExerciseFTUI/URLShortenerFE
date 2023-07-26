@@ -16,3 +16,7 @@ export function apiPostShorten({ user_id, full_url, short_url }) {
       .post(`${import.meta.env.VITE_BASE_URL}/create`, data)
       .then((res) => res.data);
   }
+
+export function apiLoginStatus() {
+    return axios.get(`${import.meta.env.VITE_BASE_URL}/auth/login/success`).then(res => res.data);
+}
