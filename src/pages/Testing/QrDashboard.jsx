@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiAddQr, apiGetQr } from "../../api/posts";
+import { apiAddQr, apiGetQr } from "../../utils";
 import { useState } from "react";
 
 import { ToastContainer, toast } from "react-toastify";

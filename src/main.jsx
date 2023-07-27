@@ -24,7 +24,7 @@ import HistoryLinkPage from "./pages/HistoryLink"
 import URLShortenerPage from "./pages/URLShortener"
 
 import Dashboard from "./pages/Testing/dashboard"
-import { QrDashboard } from "./pages/Testing/qrDashboard"
+import { QrDashboard } from "./pages/Testing/QrDashboard"
 
 const router = createBrowserRouter([
   {

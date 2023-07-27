@@ -26,7 +26,7 @@ import { ToastContainer, toast } from "react-toastify"
 
 function HistoryLinkPage() {
   const queryClient = useQueryClient();
-  const userId = "649c77d4bb81532d5f46f49b";
+  const userId = sessionStorage.getItem("userId");
 
   const postQuery = useQuery({
     queryKey: ["getAllLinks", userId],
