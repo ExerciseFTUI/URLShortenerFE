@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { QRCode } from "react-qrcode-logo";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
 import HexaParticles from "../../components/hexagonAnim/HexaParticles";
 
 import logo from "../../assets/exe-logo-with-bg.png";
-import { apiGetQr, apiGetUserData } from "../../utils";
+import { apiGetQr, apiGetUserData, apiPostShorten } from "../../utils";
+
+import { toast, ToastContainer } from "react-toastify";
 
 const SummaryPage = () => {
   const [link, setLink] = useState("");
@@ -30,26 +32,90 @@ const SummaryPage = () => {
     enabled: !!userQuery,
   });
 
+  //Shorten link request
+  const mutation = useMutation({
+    mutationFn: (params) =>
+      apiPostShorten(
+        {
+          user_id: params,
+          full_url: link,
+          short_url: "",
+        }
+      ),
+    onSuccess: () => {
+      toast.success("Your short url has been successfully generated", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setTimeout(() => {window.location.href = "/url-shortener/history"}, 1000);
+    },
+    onError: (error) => {
+      toast.warn("Failed to generate short url", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      // console.log(error);
+      setTimeout(() => {}, 3000);
+    },
+  });
+
   //User Qr Codes
   const userQr = qrQuery.data?.payload;
 
-  function shortenLink(e) {
-    if (link.length == 0) {
-      e.preventDefault();
+  const handleGetURL = (e) => {
+    const userId = sessionStorage.getItem("userId");
+    if(link == ""){
+      toast.warn("Please fill in the form", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       return;
     }
-  }
+    if(userId == null && link != "") return navigate("/login");
+    if(!isValidUrl(link)){
+      toast.warn("Please enter a valid url", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+    mutation.mutate(userId);
+  };
 
   if (userQuery.isSuccess) {
     sessionStorage.setItem("userId", userQuery.data.user._id);
     sessionStorage.setItem("name", userQuery.data.user.name);
 
     //Check if user already fill the data
-    !userQuery.data.user.universitas && navigate("/account/fill-data");
+    !userQuery.data.user.fakultas && navigate("/account/fill-data");
   }
 
   if (qrQuery.isSuccess) {
-    console.log(qrQuery.data);
+    // console.log(qrQuery.data);
   }
 
   return (
@@ -83,7 +149,7 @@ const SummaryPage = () => {
           Try our URL Shortener feature!
         </p>
 
-        <form className="flex w-full max-w-xl" onSubmit={shortenLink}>
+        <div className="flex w-full max-w-xl">
           <input
             type="text"
             name="summary-url-shortener-input"
@@ -94,14 +160,15 @@ const SummaryPage = () => {
           />
 
           <button
-            type="submit"
+            type="button"
             name="submit-summary-shortener"
             title="submit-summary-shortener"
+            onClick={handleGetURL}
             className="btn-light text-dark border-dark border-l-2 rounded-r-lg text-lg md:whitespace-nowrap md:px-3 md:text-xl"
           >
             Get URL
           </button>
-        </form>
+        </div>
       </div>
 
       <div
@@ -136,8 +203,30 @@ const SummaryPage = () => {
           Get Here
         </Link>
       </div>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
 
 export default SummaryPage;
+
+function isValidUrl(urlString){
+  let url;
+  try {
+    url = new URL(urlString);
+  } catch (e) {
+    return false;
+  }
+  return url.protocol === "http:" || url.protocol === "https:";
+};
