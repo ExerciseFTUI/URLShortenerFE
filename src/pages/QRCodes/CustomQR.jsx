@@ -48,7 +48,8 @@ function CustomQR() {
       // setBgColor("");
 
       setErrorMessage("");
-
+      //Download Qr
+      download();
       //Display Toast
       toast.success("Your QR Code has been successfully generated");
     },
@@ -62,7 +63,6 @@ function CustomQR() {
 
   const handleAddQr = () => {
     mutation.mutate();
-    download();
   };
 
   const uploadRef = useRef(null);

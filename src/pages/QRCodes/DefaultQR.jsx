@@ -36,7 +36,8 @@ function DefaultQR() {
       // setTitle("");
       // setLink("");
       setErrorMessage("");
-
+      //Download Qr
+      download();
       toast.success("Your QR Code has been successfully generated");
     },
     onError: (error) => {
@@ -47,7 +48,6 @@ function DefaultQR() {
 
   const handleAddQr = () => {
     mutation.mutate();
-    download();
   };
 
   function download() {
