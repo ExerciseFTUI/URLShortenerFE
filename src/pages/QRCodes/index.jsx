@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom"
+import { Navigate, Outlet, useLocation } from "react-router-dom"
 
 import { ButtonLink } from "../../components/button"
 
@@ -7,6 +7,10 @@ import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
 
 function QRCodes() {
   const place = useLocation().pathname.split("/")[2]
+
+  if (!place) {
+    return <Navigate to="default" />
+  }
 
   return (
     <div
