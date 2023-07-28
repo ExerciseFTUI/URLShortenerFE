@@ -53,7 +53,7 @@ const SummaryPage = () => {
         progress: undefined,
         theme: "light",
       });
-      setTimeout(() => {window.location.href = "/url-shortener/history"}, 1000);
+      setTimeout(() => {navigate("/url-shortener/history")}, 1000);
     },
     onError: (error) => {
       toast.warn("Failed to generate short url", {
