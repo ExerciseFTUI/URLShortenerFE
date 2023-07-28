@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 import { ButtonLink } from "../../components/button/"
 
@@ -13,6 +13,7 @@ import { ToastContainer, toast } from "react-toastify"
 
 function EditLinkPage() {
   const LINK_ID = useLocation().pathname.split("/")[3]
+  const navigate = useNavigate()
 
   const [shorts, setShorts] = useState("")
   const [destinationLink, setDestinationLink] = useState("")
@@ -38,7 +39,7 @@ function EditLinkPage() {
         progress: undefined,
         theme: "light",
       });
-      setTimeout(() => {window.location.href = "/url-shortener/history"}, 1000);
+      setTimeout(() => {navigate("/url-shortener/history")}, 1000);
     },
     onError: (error) => {
       toast.warn("Failed to generate short url", {

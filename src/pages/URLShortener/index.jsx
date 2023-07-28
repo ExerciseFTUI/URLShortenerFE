@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 
 import QRInput from "../QRCodes/QRInput"
@@ -15,6 +16,7 @@ function URLShortenerPage() {
   const [title, setTitle] = useState("")
   const [custom, setCustom] = useState("")
 
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const userId = sessionStorage.getItem("userId");
 
@@ -39,7 +41,7 @@ function URLShortenerPage() {
         progress: undefined,
         theme: "light",
       });
-      setTimeout(() => {window.location.href = "/url-shortener/history"}, 1000);
+      setTimeout(() => {navigate("/url-shortener/history")}, 1000);
     },
     onError: (error) => {
       toast.warn("Failed to generate short url", {
