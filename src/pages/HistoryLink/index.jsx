@@ -102,7 +102,12 @@ function HistoryLinkPage() {
             },
           }}
           className="relative z-[1] mt-8 w-full flex items-start justify-start flex-wrap gap-4 overflow-y-auto pb-4 md:pb-4 px-4 md:px-12"
-          style={{ height: postQuery.isLoading ? "100%" : "auto" }}
+          style={{
+            height:
+              postQuery.isLoading || postQuery.data.results.length == 0
+                ? "100%"
+                : "auto",
+          }}
         >
           {/* prettier-ignore */}
           <AnimatePresence >
