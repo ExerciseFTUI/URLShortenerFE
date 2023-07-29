@@ -23,6 +23,7 @@ function InputText({
         placeholder={props.placeholder || "Enter your " + name + "..."}
         minLength={minLength}
         maxLength={maxLength}
+        required={props.required || false}
         className={
           "bg-light shadow-md shadow-grey-2 text-dark outline-none rounded-full pl-4 h-12 mt-2 mb-4" +
           " " +

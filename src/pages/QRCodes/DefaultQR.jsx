@@ -1,59 +1,130 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useState } from "react";
+import { QRCode } from "react-qrcode-logo";
+import { saveAs } from "file-saver";
 
-import QRInput from "./QRInput"
+import QRInput from "./QRInput";
 
-import qr from "../../assets/qr-codes.png"
+import logo from "../../assets/exe-logo-with-bg.png";
+//React Query
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+//API
+import { apiAddQr } from "../../utils";
+//React-Toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DefaultQR() {
-  const [link, setLink] = useState("")
-  const [title, setTitle] = useState("")
+  const queryClient = useQueryClient();
+
+  const [link, setLink] = useState("");
+  const [title, setTitle] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const userId = sessionStorage.getItem("userId");
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      apiAddQr(
+        null, //File field didnt exist
+        userId,
+        link, // Use the 'link' state
+        title, // Use the 'title' state
+        null //Custom Color field didnt exist
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["getQrByUser", userId]);
+      // setTitle("");
+      // setLink("");
+      setErrorMessage("");
+      //Download Qr
+      download();
+      toast.success("Your QR Code has been successfully generated");
+    },
+    onError: (error) => {
+      setErrorMessage(error.response.data.message);
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleAddQr = () => {
+    mutation.mutate();
+  };
+
+  function download() {
+    if (link.length == 0) return;
+
+    let imageData = document
+      .getElementById("default-qr-code")
+      .toDataURL("image/png");
+    saveAs(imageData, title);
+  }
 
   return (
     <div
       id="qr-codes-default"
-      className="flex flex-col lg:flex-center lg:flex-row lg:gap-16"
+      className="flex-center flex-col lg:flex-row lg:gap-16"
     >
-      <form className="flex flex-col gap-6 mb-8 lg:w-[540px]">
-        <div className="flex">
-          <QRInput
-            placeholder="Destination link here"
-            value={link}
-            onChange={setLink}
-            required={true}
-            className="w-full"
-          />
+      <div className="bg-light flex-center flex-col-reverse gap-4 border-2 border-dark-2 p-4 pb-8 rounded-xl">
+        <h1 className="font-semibold text-3xl w-fit max-w-4xl pt-2">
+          {title || "My QR Code"}
+        </h1>
 
-          <button type="button" className="btn-dark px-4 rounded-r-md">
-            Preview
-          </button>
+        <div className="border-2 border-dark-2 rounded-sm">
+          <QRCode
+            value={link}
+            ecLevel="H"
+            enableCORS
+            size={256}
+            logoImage={logo}
+            logoPadding={2}
+            removeQrCodeBehindLogo
+            id="default-qr-code"
+          />
         </div>
+      </div>
+
+      <form className="flex flex-col mb-8 lg:w-[540px]">
+        <QRInput
+          placeholder="Destination link here"
+          value={link}
+          onChange={setLink}
+          required={true}
+          name="Link"
+          className="w-full mb-6"
+        />
 
         <QRInput
           placeholder="Title (optional)"
           value={title}
           onChange={setTitle}
-          className="w-full"
+          className="w-full mb-6"
+          name="Title"
           maxLength={16}
         />
+
+        <button
+          type="button"
+          className="btn-dark font-medium rounded-md md:text-lg"
+          onClick={handleAddQr}
+        >
+          Download
+        </button>
       </form>
 
-      <div className="text-center flex-center flex-col gap-4">
-        <img alt="qr-codes" src={qr} className="w-64 h-64" />
-
-        <h1 className="font-medium text-3xl border-dark-2 border-b-2 pb-1 w-full max-w-4xl">
-          {title || "Title"}
-        </h1>
-
-        <Link
-          to="/qr-codes/default"
-          className="btn-light font-medium md:text-lg"
-        >
-          Download here
-        </Link>
-      </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
-  )
+  );
 }
 
-export default DefaultQR
+export default DefaultQR;

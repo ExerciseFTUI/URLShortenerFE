@@ -1,64 +1,151 @@
-import { useRef, useState } from "react"
-import { Link } from "react-router-dom"
+import { useRef, useState } from "react";
+import { QRCode } from "react-qrcode-logo";
+import { saveAs } from "file-saver";
 
-import QRInput from "./QRInput"
+import QRInput from "./QRInput";
 
-import qr from "../../assets/qr-codes.png"
+import logo from "../../assets/exe-logo-with-bg.png";
+
+//React Query
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+//API
+import { apiAddQr } from "../../utils";
+//React-Toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CustomQR() {
-  const [link, setLink] = useState("")
-  const [title, setTitle] = useState("")
-  const [color, setColor] = useState("#0D2734")
-  const [icon, setIcon] = useState(null)
-  const [iconName, setIconName] = useState("")
+  const [link, setLink] = useState("");
+  const [title, setTitle] = useState("");
+  const [bgColor, setBgColor] = useState("#FFFFFF");
+  const [QRColor, setQRColor] = useState("#000000");
+  const [icon, setIcon] = useState(logo);
+  const [iconName, setIconName] = useState("");
 
-  const uploadRef = useRef(null)
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const queryClient = useQueryClient();
+  const userId = sessionStorage.getItem("userId");
+
+  const mutation = useMutation({
+    mutationFn: () =>
+      apiAddQr(
+        selectedFile, //File field
+        userId,
+        link, // Use the 'link' state
+        title, // Use the 'title' state
+        QRColor //Custom Color field
+      ),
+    onSuccess: () => {
+      //Refetch
+      queryClient.invalidateQueries(["getQrByUser", userId]);
+
+      //Reset states value
+      // setTitle("");
+      // setLink("");
+      // setQRColor("");
+      // setBgColor("");
+
+      setErrorMessage("");
+      //Download Qr
+      download();
+      //Display Toast
+      toast.success("Your QR Code has been successfully generated");
+    },
+    onError: (error) => {
+      setErrorMessage(error.response.data.message);
+
+      //Display Toast
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleAddQr = () => {
+    mutation.mutate();
+  };
+
+  const uploadRef = useRef(null);
+
+  function download() {
+    //Post Qr Code to the database
+    if (link.length == 0) return;
+
+    let imageData = document
+      .getElementById("default-qr-code")
+      .toDataURL("image/png");
+    saveAs(imageData, title);
+  }
 
   function handleUploadIcon(e) {
-    let file = e.target.files[0]
+    let file = e.target.files[0];
 
-    file && setIconName(file.name)
+    file && setIconName(file.name);
 
-    file && setIcon(URL.createObjectURL(file))
+    file && setIcon(URL.createObjectURL(file));
+
+    file && setSelectedFile(file);
   }
 
   return (
     <div
       id="qr-codes-custom"
-      className="flex flex-col lg:flex-center lg:flex-row lg:gap-16"
+      className="flex flex-col lg:flex-center lg:items-start lg:flex-row lg:gap-16"
     >
-      <form className="flex flex-col gap-6 mb-8 lg:w-[540px]">
-        <div className="flex">
-          <QRInput
-            placeholder="Destination link here"
+      <div className="bg-light flex-center flex-col gap-4 border-2 border-dark-2 p-4 pb-8 rounded-xl">
+        <div className="border-2 border-dark-2 rounded-sm">
+          <QRCode
             value={link}
-            onChange={setLink}
-            required={true}
-            className="w-full"
+            ecLevel="H"
+            enableCORS
+            size={256}
+            bgColor={bgColor}
+            fgColor={QRColor}
+            logoImage={icon}
+            logoPadding={2}
+            removeQrCodeBehindLogo
+            id="default-qr-code"
           />
-
-          <button type="button" className="btn-dark px-4 rounded-r-md">
-            Preview
-          </button>
         </div>
+
+        <h1 className="font-semibold text-3xl w-fit max-w-4xl pt-2">
+          {title || "My QR Code"}
+        </h1>
+      </div>
+
+      <form className="flex flex-col mb-8 lg:w-[540px]">
+        <QRInput
+          placeholder="Destination link here"
+          value={link}
+          onChange={setLink}
+          required={true}
+          name="Link"
+          className="w-full mb-4"
+        />
 
         <QRInput
           placeholder="Title (optional)"
           value={title}
           onChange={setTitle}
-          className="w-full"
+          name="Title"
+          className="w-full mb-4"
           maxLength={16}
         />
 
+        <label htmlFor="upload-image" className="font-medium text-lg mb-1">
+          Upload Image
+        </label>
+
         <div
-          id="upload-icon"
-          className="border-b-2 border-dark-2 flex justify-between px-4 py-1"
+          id="upload-image"
+          className="border-b-2 border-dark-2 flex justify-between px-4 py-1 mb-4"
         >
           <p className="font-normal text-grey-2 text-lg">
             {iconName || "Choose a File"}
           </p>
 
           <input
+            name="upload-image"
             ref={uploadRef}
             title="Upload Image"
             type="file"
@@ -86,40 +173,72 @@ function CustomQR() {
           </svg>
         </div>
 
+        <label htmlFor="bg-color" className="font-medium text-lg mb-1">
+          Background Color
+        </label>
+
         <div
-          id="input-custom-color"
-          className="border-b-2 border-dark-2 flex justify-between px-4 py-1"
+          id="input-bg-color"
+          className="border-b-2 border-dark-2 flex justify-between px-4 py-1 mb-4"
         >
           <p className="font-normal text-grey-2 text-lg">
-            Choose Custom Color [ {color} ]
+            Background [ {bgColor} ]
           </p>
 
           <input
-            title="custom-color"
+            title="bg-color"
             type="color"
-            onChange={(e) => setColor(e.target.value)}
-            value={color}
-            className="bg-light border-none w-1/2 cursor-pointer"
+            name="bg-color"
+            onChange={(e) => setBgColor(e.target.value)}
+            value={bgColor}
+            className="bg-light border-none w-[30%] cursor-pointer"
           />
         </div>
-      </form>
 
-      <div className="text-center flex-center flex-col gap-4">
-        <img alt="qr-codes" src={qr} className="w-64 h-64" />
+        <label htmlFor="qr-color" className="font-medium text-lg mb-1">
+          QR Color
+        </label>
 
-        <h1 className="font-medium text-3xl border-dark-2 border-b-2 pb-2 w-full max-w-4xl">
-          {title || "Title"}
-        </h1>
-
-        <Link
-          to="/qr-codes/default"
-          className="btn-light font-medium md:text-lg"
+        <div
+          id="input-qr-color"
+          className="border-b-2 border-dark-2 flex justify-between px-4 py-1 mb-4"
         >
-          Download here
-        </Link>
-      </div>
+          <p className="font-normal text-grey-2 text-lg">
+            QR Color [ {QRColor} ]
+          </p>
+
+          <input
+            title="qr-color"
+            type="color"
+            name="qr-color"
+            onChange={(e) => setQRColor(e.target.value)}
+            value={QRColor}
+            className="bg-light border-none w-[30%] cursor-pointer"
+          />
+        </div>
+
+        <button
+          type="button"
+          className="btn-dark font-medium rounded-md md:text-lg"
+          onClick={handleAddQr}
+        >
+          Download
+        </button>
+      </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
-  )
+  );
 }
 
-export default CustomQR
+export default CustomQR;
