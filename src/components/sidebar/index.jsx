@@ -1,20 +1,28 @@
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 
+import profile from '../../assets/sidebar/profile.jpg'
+
 const navs = [
   { text: "History Links", to: "/url-shortener/history", path: "history" },
   { text: "Custom Links", to: "/url-shortener/create", path: "create" },
   { text: "QR Codes", to: "/qr-codes/default", path: "qr-codes" },
 ]
 
+const profName = "Fulan Abdul Wahid"
+
 function Sidebar() {
   const location = useLocation().pathname.split("/")
 
   const [opened, setOpened] = useState(false)
 
+
   function toggleSide() {
     setOpened(!opened)
   }
+
+  //slice profile name into 2 words
+  const sliceName = profName.split(" ").slice(0, 2).join(" ")
 
   // prettier-ignore
   return (
@@ -46,8 +54,8 @@ function Sidebar() {
       </div>
 
       <div className="overflow-hidden ease-in-out duration-300">
-        <Link to="/summary" className="btn-light rounded-md mb-4">
-          Create New
+        <Link to="/summary" className="btn-light rounded-md mb-4 w-full tracking-wider">
+          Home
         </Link>
 
         <div className="bg-light w-full h-[1px] mb-6" />
@@ -67,9 +75,10 @@ function Sidebar() {
         </ul>
       </div>
 
-      <Link to="/account" className="btn-light rounded-md">
-        Nama User
-      </Link>
+      <div className="flex space-x-2 border-2 border-grey-2 p-2 rounded-md">
+        <img src={profile} className="inline-block h-9 w-9 rounded-full"/>
+        <p className="text-sm font-bold place-self-center">{sliceName}</p>
+      </div>
     </aside>
   )
 }

@@ -88,6 +88,7 @@ function URLShortenerPage() {
         <QRInput
           placeholder="Destination link here"
           value={destinationLink}
+          type="url"
           onChange={setDestinationLink}
           required={true}
           name="Link"
