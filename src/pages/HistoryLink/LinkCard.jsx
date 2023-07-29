@@ -132,15 +132,15 @@ function LinkCard({ link, handleDelete }) {
       </div>
 
       <a
-        className="text-sm"
         href={`${import.meta.env.VITE_BASE_URL}/${link.short}`}
         target="_blank"
         rel="noopener noreferrer"
+        className="text-sm overflow-clip"
       >
         Short : <span className="underline">ex.tech/{link.short}</span>
       </a>
 
-      <Link to={link.full} className="text-sm">
+      <Link to={link.full} className="text-sm overflow-clip">
         Full <span className="ml-3.5">:</span>{" "}
         <span className="underline">{link.full}</span>
       </Link>
