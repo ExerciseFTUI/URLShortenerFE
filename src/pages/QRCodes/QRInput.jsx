@@ -5,6 +5,7 @@ function QRInput({
   value = "",
   required = false,
   onChange = null,
+  name = "name",
   ...props
 }) {
   const handleInputChange = (e, set) => {
@@ -13,6 +14,11 @@ function QRInput({
 
   return (
     // prettier-ignore
+    <>
+    <label htmlFor={name} className="font-medium text-lg mb-1">
+        {name[0].toUpperCase() + name.slice(1, name.length)}
+    </label>
+    
     <input
       title={placeholder}
       placeholder={placeholder}
@@ -26,6 +32,7 @@ function QRInput({
       required={required}
       maxLength={props.maxLength || 1000}
     />
+    </>
   )
 }
 

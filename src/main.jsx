@@ -2,26 +2,41 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+
 import "./main.css"
 
 import App from "./App"
 
-import LoginPage from "./pages/Login"
-import RegisterPage from "./pages/Register/"
-import ResetPasswordPage from "./pages/ResetPassword"
+import LoginPage from "./pages/Accounts/Login"
+import FillData from "./pages/Accounts/FillData"
+import ResetPasswordPage from "./pages/Accounts/ResetPassword"
 
 import QRCodes from "./pages/QRCodes"
 import CustomQR from "./pages/QRCodes/CustomQR"
 import DefaultQR from "./pages/QRCodes/DefaultQR"
+
 import Summary from "./pages/Summary"
-import SummaryPage from "./pages/Summary"
+
+import EditLinkPage from "./pages/EditLink"
+import HistoryLinkPage from "./pages/HistoryLink"
+import URLShortenerPage from "./pages/URLShortener"
+
+import Dashboard from "./pages/Testing/dashboard"
+import { QrDashboard } from "./pages/Testing/QrDashboard"
 
 const router = createBrowserRouter([
   {
     element: <App />,
+    path: "",
     children: [
       {
-        path: "/qr-codes",
+        path: "summary",
+        element: <Summary />,
+      },
+      {
+        path: "qr-codes",
         element: <QRCodes />,
         children: [
           {
@@ -31,6 +46,23 @@ const router = createBrowserRouter([
           {
             path: "custom",
             element: <CustomQR />,
+          },
+        ],
+      },
+      {
+        path: "/url-shortener",
+        children: [
+          {
+            path: "history",
+            element: <HistoryLinkPage />,
+          },
+          {
+            path: "create",
+            element: <URLShortenerPage />,
+          },
+          {
+            path: "edit-link/:id",
+            element: <EditLinkPage />,
           },
         ],
       },
@@ -44,8 +76,8 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "register",
-        element: <RegisterPage />,
+        path: "fill-data",
+        element: <FillData />,
       },
       {
         path: "reset-password",
@@ -54,17 +86,31 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/",
-    element: <Navigate to="/account/login" />,
+    path: "/testing",
+    children: [
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "QrDashboard",
+        element: <QrDashboard />,
+      },
+    ],
   },
   {
-    path: "summary",
-    element: <Summary />
-  }
+    path: "*",
+    element: <Navigate to="/account/login" />,
+  },
 ])
+
+const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   </React.StrictMode>
 )

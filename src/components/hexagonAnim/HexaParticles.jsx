@@ -7,6 +7,8 @@ function HexaParticles({
   direction = "right",
   color = "#889DA8",
   angle = "clockwise",
+  fullscreen = true,
+  ...props
 }) {
   /* Particle JS settings */
   const options = useMemo(() => {
@@ -19,7 +21,7 @@ function HexaParticles({
         opacity: 1,
       },
       fullScreen: {
-        enable: true,
+        enable: fullscreen,
         zIndex: -1,
       },
       detectRetina: true,
@@ -149,7 +151,14 @@ function HexaParticles({
     loadSlim(engine)
   }, [])
 
-  return <Particles init={particlesInit} options={options} />
+  return (
+    <Particles
+      init={particlesInit}
+      options={options}
+      height={props.height}
+      className={props.className}
+    />
+  )
 }
 
 export default HexaParticles
