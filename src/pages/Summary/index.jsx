@@ -85,7 +85,8 @@ const SummaryPage = () => {
   const handleKeyPress = e => {
     //it triggers by pressing the enter key
   if (e.key === 'Enter') {
-    handleGetURL();
+    e.preventDefault();
+    handleGetURL(e);
   }
 };
 
