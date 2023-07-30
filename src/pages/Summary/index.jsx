@@ -1,47 +1,45 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { QRCode } from "react-qrcode-logo";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query"
+import { toast, ToastContainer } from "react-toastify"
+import { QRCode } from "react-qrcode-logo"
 
-import HexaParticles from "../../components/hexagonAnim/HexaParticles";
+import { apiGetQr, apiGetUserData, apiPostShorten } from "../../utils"
 
-import logo from "../../assets/exe-logo-with-bg.png";
-import { apiGetQr, apiGetUserData, apiPostShorten } from "../../utils";
+import HexaParticles from "../../components/hexagonAnim/HexaParticles"
 
-import { toast, ToastContainer } from "react-toastify";
+import logo from "../../assets/exe-logo-with-bg.png"
 
 const SummaryPage = () => {
-  const [link, setLink] = useState("");
-  const queryClient = useQueryClient();
+  const [link, setLink] = useState("")
+  const queryClient = useQueryClient()
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   //Get user data
   const userQuery = useQuery({
     queryKey: ["getUserData"],
     queryFn: () => apiGetUserData(),
-  });
+  })
 
   //User Data
-  const user = userQuery.data?.user;
+  const user = userQuery.data?.user
 
   //After that get user qr codes
   const qrQuery = useQuery({
     queryKey: ["getQrByUser", userQuery.data?.user._id],
     queryFn: () => apiGetQr(userQuery.data?.user._id),
     enabled: !!userQuery,
-  });
+  })
 
   //Shorten link request
   const mutation = useMutation({
     mutationFn: (params) =>
-      apiPostShorten(
-        {
-          user_id: params,
-          full_url: link,
-          short_url: "",
-        }
-      ),
+      apiPostShorten({
+        user_id: params,
+        full_url: link,
+        short_url: "",
+      }),
     onSuccess: () => {
       toast.success("Your short url has been successfully generated", {
         position: "bottom-center",
@@ -52,8 +50,10 @@ const SummaryPage = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-      });
-      setTimeout(() => {navigate("/url-shortener/history")}, 1000);
+      })
+      setTimeout(() => {
+        navigate("/url-shortener/history")
+      }, 1000)
     },
     onError: (error) => {
       toast.warn("Failed to generate short url", {
@@ -65,57 +65,20 @@ const SummaryPage = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-      });
+      })
       // console.log(error);
-      setTimeout(() => {}, 3000);
+      setTimeout(() => {}, 3000)
     },
-  });
+  })
 
   //User Qr Codes
-  const userQr = qrQuery.data?.payload;
+  const userQr = qrQuery.data?.payload
 
   const handleGetURL = (e) => {
-    const userId = sessionStorage.getItem("userId");
-    if(link == ""){
-      toast.warn("Please fill in the form", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      return;
-    }
-    if(userId == null && link != "") return navigate("/login");
-    if(!isValidUrl(link)){
-      toast.warn("Please enter a valid url", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      return;
-    }
-    mutation.mutate(userId);
-  };
+    e.preventDefault()
+    sessionStorage.setItem("tempLink", link)
 
-  if (userQuery.isSuccess) {
-    sessionStorage.setItem("userId", userQuery.data.user._id);
-    sessionStorage.setItem("name", userQuery.data.user.name);
-
-    //Check if user already fill the data
-    !userQuery.data.user.fakultas && navigate("/account/fill-data");
-  }
-
-  if (qrQuery.isSuccess) {
-    // console.log(qrQuery.data);
+    navigate("/url-shortener/create")
   }
 
   return (
@@ -203,6 +166,7 @@ const SummaryPage = () => {
           Get Here
         </Link>
       </div>
+
       <ToastContainer
         position="bottom-center"
         autoClose={3000}
@@ -216,17 +180,17 @@ const SummaryPage = () => {
         theme="light"
       />
     </div>
-  );
-};
+  )
+}
 
-export default SummaryPage;
+export default SummaryPage
 
-function isValidUrl(urlString){
-  let url;
+function isValidUrl(urlString) {
+  let url
   try {
-    url = new URL(urlString);
+    url = new URL(urlString)
   } catch (e) {
-    return false;
+    return false
   }
-  return url.protocol === "http:" || url.protocol === "https:";
-};
+  return url.protocol === "http:" || url.protocol === "https:"
+}

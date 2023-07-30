@@ -1,18 +1,9 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import { ButtonGoogle } from "../../../components/button";
-import HexaParticles from "../../../components/hexagonAnim/HexaParticles";
+import { ButtonGoogle } from "../../../components/button"
+import HexaParticles from "../../../components/hexagonAnim/HexaParticles"
 
 function LoginPage() {
-  const [firstTime, setFirstTime] = useState(false);
-
   function login() {
-    // Send request for Google Login
-    window.open(`${import.meta.env.VITE_BASE_URL}/auth/google`, "_self");
-    if (firstTime) {
-      useNavigate("/account/fill-data");
-    }
+    window.open(`${import.meta.env.VITE_BASE_URL}/auth/google`, "_self")
   }
 
   return (
@@ -31,7 +22,7 @@ function LoginPage() {
 
       <HexaParticles background="#0D2734" color="#527182" />
     </div>
-  );
+  )
 }
 
-export default LoginPage;
+export default LoginPage

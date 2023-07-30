@@ -1,34 +1,48 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { ToastContainer, toast } from "react-toastify"
+import { QRCode } from "react-qrcode-logo"
+
+import { apiPostShorten } from "../../utils"
 
 import QRInput from "../QRCodes/QRInput"
 
+import logo from "../../assets/exe-logo-with-bg.png"
 import bgImage from "../../assets/backgrounds/hexa-history.png"
 import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
-
-import { apiPostShorten } from "../../utils"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { ToastContainer, toast } from "react-toastify"
 
 function URLShortenerPage() {
   const [destinationLink, setDestinationLink] = useState("")
   const [title, setTitle] = useState("")
   const [custom, setCustom] = useState("")
 
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const userId = sessionStorage.getItem("userId");
+  const [tryQR, setTryQR] = useState(false)
+
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const userId = sessionStorage.getItem("userId")
+
+  const tempLink = sessionStorage.getItem("tempLink")
+
+  const location = useLocation()
+
+  useEffect(() => {
+    if (tempLink) setDestinationLink(tempLink)
+  }, [tempLink])
+
+  useEffect(() => {
+    sessionStorage.removeItem("tempLink")
+  }, [location])
 
   const mutation = useMutation({
     mutationFn: () =>
-      apiPostShorten(
-        {
-          user_id: userId,
-          full_url: destinationLink,
-          short_url: custom,
-        }
-      ),
+      apiPostShorten({
+        user_id: userId,
+        full_url: destinationLink,
+        short_url: custom,
+      }),
     onSuccess: () => {
       // queryClient.invalidateQueries(["getAll", userId]);
       toast.success("Your short url has been successfully generated", {
@@ -40,8 +54,12 @@ function URLShortenerPage() {
         draggable: true,
         progress: undefined,
         theme: "light",
-      });
-      setTimeout(() => {navigate("/url-shortener/history")}, 1000);
+      })
+
+      setTryQR(true)
+      //   setTimeout(() => {
+      //     navigate("/url-shortener/history")
+      //   }, 1000)
     },
     onError: (error) => {
       toast.warn("Failed to generate short url", {
@@ -53,25 +71,27 @@ function URLShortenerPage() {
         draggable: true,
         progress: undefined,
         theme: "light",
-      });
-      setTimeout(() => {}, 3000);
+      })
+      setTimeout(() => {}, 3000)
     },
-  });
+  })
 
-  const shortenLink = () => {
+  const shortenLink = (e) => {
+    e.preventDefault()
+
     if (isValidUrl(destinationLink)) {
-        mutation.mutate();
+      mutation.mutate()
     } else {
-        toast.warn("Invalid destination url", {
-          position: "bottom-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+      toast.warn("Invalid destination url", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      })
     }
   }
 
@@ -139,6 +159,50 @@ function URLShortenerPage() {
         </button>
       </form>
 
+      <AnimatePresence>
+        {tryQR && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="bg-light flex-center gap-4 absolute top-1/4 z-10 p-12 border-dark-2 border-2 rounded-md drop-shadow-lg shadow-xl shadow-dark"
+          >
+            <p className="font-medium text-lg">
+              Want to make the link into a QR Code?
+            </p>
+
+            <QRCode
+              value="https://www.ex.tech/"
+              ecLevel="H"
+              enableCORS
+              size={196}
+              logoImage={logo}
+              logoPadding={2}
+              fgColor="#1C465C"
+              removeQrCodeBehindLogo
+              id="landing-qr-code"
+            />
+
+            <p className="font-medium text-lg">
+              Try our QR Code feature!{" "}
+              <span>
+                <Link to="/qr-code/default" className="underline">
+                  Get Here
+                </Link>
+              </span>
+            </p>
+
+            <button
+              title="close"
+              onClick={() => setTryQR(false)}
+              className="absolute top-2 right-2 underline text-sm italic"
+            >
+              close
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <>
         <img
           alt="background"
@@ -152,6 +216,7 @@ function URLShortenerPage() {
           className="absolute w-full h-screen object-cover left-0 top-0 pointer-events-none md:hidden"
         />
       </>
+
       <ToastContainer
         position="bottom-center"
         autoClose={3000}
@@ -170,12 +235,12 @@ function URLShortenerPage() {
 
 export default URLShortenerPage
 
-function isValidUrl(urlString){
-  let url;
+function isValidUrl(urlString) {
+  let url
   try {
-    url = new URL(urlString);
+    url = new URL(urlString)
   } catch (e) {
-    return false;
+    return false
   }
-  return url.protocol === "http:" || url.protocol === "https:";
-};
+  return url.protocol === "http:" || url.protocol === "https:"
+}
