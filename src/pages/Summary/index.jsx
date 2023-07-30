@@ -82,9 +82,9 @@ const SummaryPage = () => {
     navigate("/url-shortener/create")
   }
 
-  const handleKeypress = e => {
+  const handleKeyPress = e => {
     //it triggers by pressing the enter key
-  if (e.keyCode === 13) {
+  if (e.key === 'Enter') {
     handleGetURL();
   }
 };
@@ -135,6 +135,7 @@ const SummaryPage = () => {
             required
             value={link}
             onChange={(e) => setLink(e.target.value)}
+            onKeyDown={handleKeyPress}
             className="bg-light text-dark outline-none rounded-l-lg w-full h-24 pl-6"
           />
 
@@ -143,8 +144,6 @@ const SummaryPage = () => {
             name="submit-summary-shortener"
             title="submit-summary-shortener"
             onClick={handleGetURL}
-            onKeyPress={handleKeypress}
-            onCl
             className="btn-light text-dark border-dark border-l-2 rounded-r-lg text-lg md:whitespace-nowrap md:px-3 md:text-xl"
           >
             Get URL
