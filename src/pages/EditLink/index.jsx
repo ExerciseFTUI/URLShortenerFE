@@ -130,6 +130,7 @@ function EditLinkPage() {
             required={true}
             name="Custom Link"
             className="w-full mb-6"
+            maxLength={16}
           />
 
           <QRInput
@@ -139,7 +140,6 @@ function EditLinkPage() {
             className="w-full mb-6"
             name="Destination Link"
             required={true}
-            maxLength={16}
           />
 
           <QRInput
