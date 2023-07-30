@@ -145,6 +145,8 @@ function LinkCard({ link, handleDelete }) {
         <span className="underline">{link.full}</span>
       </Link>
 
+      <p className="font-light text-xs mt-1.5">Clicked : {link.clicks}</p>
+
       <div className="flex justify-between">
         <p className="font-light text-xs mt-1.5">
           {formatDate(link.created_at)}
