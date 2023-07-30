@@ -194,7 +194,7 @@ function URLShortenerPage() {
 
             <button
               title="close"
-              onClick={() => setTryQR(false)}
+              onClick={() => navigate("/url-shortener/history")}
               className="absolute top-2 right-2 underline text-sm italic"
             >
               close

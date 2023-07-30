@@ -77,8 +77,17 @@ const SummaryPage = () => {
   const handleGetURL = (e) => {
     e.preventDefault()
     sessionStorage.setItem("tempLink", link)
-
+    const userId = sessionStorage.getItem("userId");
+    if(userId == null) return navigate("/login");
     navigate("/url-shortener/create")
+  }
+
+  if (userQuery.isSuccess) {
+    sessionStorage.setItem("userId", userQuery.data.user._id);
+    sessionStorage.setItem("name", userQuery.data.user.name);
+
+    //Check if user already fill the data
+    !userQuery.data.user.fakultas && navigate("/account/fill-data");
   }
 
   return (
