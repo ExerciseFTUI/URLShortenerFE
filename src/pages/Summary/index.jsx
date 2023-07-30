@@ -82,6 +82,13 @@ const SummaryPage = () => {
     navigate("/url-shortener/create")
   }
 
+  const handleKeypress = e => {
+    //it triggers by pressing the enter key
+  if (e.keyCode === 13) {
+    handleGetURL();
+  }
+};
+
   if (userQuery.isSuccess) {
     sessionStorage.setItem("userId", userQuery.data.user._id);
     sessionStorage.setItem("name", userQuery.data.user.name);
@@ -136,6 +143,8 @@ const SummaryPage = () => {
             name="submit-summary-shortener"
             title="submit-summary-shortener"
             onClick={handleGetURL}
+            onKeyPress={handleKeypress}
+            onCl
             className="btn-light text-dark border-dark border-l-2 rounded-r-lg text-lg md:whitespace-nowrap md:px-3 md:text-xl"
           >
             Get URL

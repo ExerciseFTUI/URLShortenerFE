@@ -12,7 +12,7 @@ import QRInput from "../QRCodes/QRInput"
 import { apiPutShorten, apiSearchShorten } from "../../utils"
 import { useMutation } from "@tanstack/react-query"
 import { ToastContainer, toast } from "react-toastify"
-// import HexaBorder from "../../components/hexagonAnim/HexaBorder"
+import HexaBorder from "../../components/hexagonAnim/HexaBorder"
 
 function EditLinkPage() {
   const LINK_ID = useLocation().pathname.split("/")[3]
