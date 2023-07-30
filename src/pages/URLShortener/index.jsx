@@ -40,6 +40,7 @@ function URLShortenerPage() {
     mutationFn: () =>
       apiPostShorten({
         user_id: userId,
+        title: title,
         full_url: destinationLink,
         short_url: custom,
       }),

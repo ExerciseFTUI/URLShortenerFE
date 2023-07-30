@@ -23,9 +23,6 @@ import EditLinkPage from "./pages/EditLink"
 import HistoryLinkPage from "./pages/HistoryLink"
 import URLShortenerPage from "./pages/URLShortener"
 
-import Dashboard from "./pages/Testing/dashboard"
-import { QrDashboard } from "./pages/Testing/QrDashboard"
-
 const router = createBrowserRouter([
   {
     element: <App />,
@@ -82,19 +79,6 @@ const router = createBrowserRouter([
       {
         path: "reset-password",
         element: <ResetPasswordPage />,
-      },
-    ],
-  },
-  {
-    path: "/testing",
-    children: [
-      {
-        path: "dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "QrDashboard",
-        element: <QrDashboard />,
       },
     ],
   },

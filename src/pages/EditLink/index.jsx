@@ -9,10 +9,10 @@ import bgImage from "../../assets/backgrounds/hexa-history.png"
 import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
 import QRInput from "../QRCodes/QRInput"
 
-import { apiGetAllLinks, apiPutShorten } from "../../utils"
+import { apiPutShorten, apiSearchShorten } from "../../utils"
 import { useMutation } from "@tanstack/react-query"
 import { ToastContainer, toast } from "react-toastify"
-import HexaBorder from "../../components/hexagonAnim/HexaBorder"
+// import HexaBorder from "../../components/hexagonAnim/HexaBorder"
 
 function EditLinkPage() {
   const LINK_ID = useLocation().pathname.split("/")[3]
@@ -22,7 +22,11 @@ function EditLinkPage() {
   const [destinationLink, setDestinationLink] = useState("")
   const [title, setTitle] = useState("")
 
-  const queries = useQuery({ queryKey: [], queryFn: () => "" })
+  // const queries = useQuery({ queryKey: [], queryFn: () => "" })
+  const queries = useQuery({
+    queryKey: ["getUrl", LINK_ID],
+    queryFn: () => apiSearchShorten(LINK_ID),
+  })
 
   const changedLink = queries.data
 
@@ -30,6 +34,7 @@ function EditLinkPage() {
     mutationFn: () =>
       apiPutShorten({
         _id: LINK_ID,
+        title: title,
         full_url: destinationLink,
         short_url: shorts,
       }),
@@ -181,8 +186,8 @@ function EditLinkPage() {
               Confirm
             </button>
           </div>
-        </form>
-      )}
+        </form>)}
+      
 
       <>
         <img
