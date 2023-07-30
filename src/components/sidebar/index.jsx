@@ -12,11 +12,10 @@ const navs = [
 
 function Sidebar() {
   const location = useLocation().pathname.split("/")
-  const nameStrg = sessionStorage.getItem("name")
+  const userName = sessionStorage.getItem("name") === null ? "Username" : sessionStorage.getItem("name")
 
   const [opened, setOpened] = useState(false)
   const [account, setAccount] = useState(false)
-  const [userName, setUserName] = useState("")
 
   function toggleSide() {
     setOpened(!opened)
@@ -24,17 +23,6 @@ function Sidebar() {
 
   function handleLogOut() {}
 
-  useEffect(() => {
-    try {
-      setUserName(nameStrg.split(" ")[1])
-    } catch {
-      console.log()
-    }
-
-    if (!userName) setUserName("Namasaya")
-  }, [nameStrg])
-
-  // prettier-ignore
   return (
     <aside
       id="sidebar"
