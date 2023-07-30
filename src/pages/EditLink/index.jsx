@@ -22,13 +22,15 @@ function EditLinkPage() {
   const [destinationLink, setDestinationLink] = useState("")
   const [title, setTitle] = useState("")
 
-  // const queries = useQuery({ queryKey: [], queryFn: () => "" })
   const queries = useQuery({
     queryKey: ["getUrl", LINK_ID],
     queryFn: () => apiSearchShorten(LINK_ID),
+    onSuccess: (data) => {
+      setShorts(data.results.short)
+      setDestinationLink(data.results.full)
+      setTitle(data.results.title)
+    }
   })
-
-  const changedLink = queries.data
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -101,12 +103,6 @@ function EditLinkPage() {
       }
     }
   }
-
-  useEffect(() => {
-    setShorts(changedLink.short)
-    setDestinationLink(changedLink.full)
-    setTitle(changedLink.title)
-  }, [changedLink])
 
   if (queries.isError) {
     return <div>{JSON.stringify(queries.error)}</div>

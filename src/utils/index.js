@@ -67,6 +67,9 @@ export function apiGetAllLinks(user_id) {
 }
 
 export function apiPostShorten({ user_id, title, full_url, short_url }) {
+  if(!title){
+    title = "Title"
+  }
   const data = {
     user_id: user_id,
     title: title,
