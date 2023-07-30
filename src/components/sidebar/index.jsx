@@ -78,11 +78,11 @@ function Sidebar() {
           title="user"
           type="button"
           onClick={() => setAccount(!account)}
-          className="bg-light w-full px-4 py-2 rounded-md flex items-center justify-between gap-2 border-b-2 border-dark-2 relative z-[1]"
+          className="bg-light w-full px-[1.4rem] py-2 rounded-md flex items-center justify-between gap-2 border-b-2 border-dark-2 relative z-[1]"
         >
           <img alt="" src={logo} className="w-8 h-8 rounded-full border-dark-2 border-2" />
 
-          <h1 className="text-dark-2 text-base overflow-hidden">{userName}</h1>
+          <h1 className="text-dark-2 text-base overflow-hidden">{userName.split(' ')[1]}</h1>
         </button>
 
         <AnimatePresence>
