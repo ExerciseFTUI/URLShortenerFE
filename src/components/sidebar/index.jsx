@@ -10,8 +10,6 @@ const navs = [
   { text: "QR Codes", to: "/qr-codes/default", path: "qr-codes" },
 ]
 
-const profName = "Fulan Abdul Wahid"
-
 function Sidebar() {
   const location = useLocation().pathname.split("/")
   const nameStrg = sessionStorage.getItem("name")
@@ -33,7 +31,7 @@ function Sidebar() {
       console.log()
     }
 
-    if (!userName) setUserName("Namasaya")
+    if (!userName) setUserName("MyName")
   }, [nameStrg])
 
   // prettier-ignore
