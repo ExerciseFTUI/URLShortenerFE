@@ -45,7 +45,6 @@ function URLShortenerPage() {
 
       setCustom(getRandomCustom(5))
     }
-
   }, [tempLink])
 
   useEffect(() => {
