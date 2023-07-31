@@ -28,7 +28,7 @@ function Sidebar() {
   return (
     <aside
       id="sidebar"
-      className={`bg-dark-1 text-lg fixed top-0 h-full px-8 py-16 flex flex-col justify-between z-20 border-grey-2 border-r-2 ease-in-out duration-500 ${opened ? "left-0" : "-left-[184px]"}`}
+      className={`bg-dark-1 text-lg fixed top-0 h-full px-8 py-16 flex flex-col justify-between z-20 border-grey-2 border-r-2 ease-in-out duration-500 ${opened ? "left-0" : "-left-56"}`}
     >
       <div
         onClick={toggleSide}
@@ -75,7 +75,7 @@ function Sidebar() {
         </ul>
       </div>
 
-      <div className="flex space-x-2 border-2 border-grey-2 p-2 rounded-md">
+      <div className="flex w-40 space-x-2 border-2 border-grey-2 p-2 rounded-md overflow-hidden">
         <img src={profile} className="inline-block h-9 w-9 rounded-full"/>
         <p className="text-sm font-bold place-self-center">{sliceName}</p>
       </div>
