@@ -12,11 +12,11 @@ import logo from "../../assets/exe-logo-with-bg.png";
 
 const SummaryPage = () => {
   //React Router
-  const location = useLocation();
-  const from = location.state?.from || "/";
+  // const location = useLocation();
+  // // const from = location.state?.from || "/";
 
-  console.log(location);
-  console.log(from);
+  // // console.log(location);
+  // // console.log(from);
 
   const [link, setLink] = useState("");
   const queryClient = useQueryClient();

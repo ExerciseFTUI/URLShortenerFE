@@ -6,6 +6,7 @@ axios.defaults.withCredentials = true;
 export async function logout() {
   try {
     await axios.get(`${import.meta.env.VITE_BASE_URL}/auth/logout`);
+    sessionStorage.clear();
   } catch (error) {
     console.error(error);
   } finally {
