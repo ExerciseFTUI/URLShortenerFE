@@ -1,13 +1,15 @@
-import { useLocation, Navigate, Outlet } from "react-router-dom";
+import { useLocation, Navigate, Outlet, useNavigate } from "react-router-dom";
 
-const RequireAuth = () => {
-  const auth = sessionStorage.get("name") ? sessionStorage.get("name") : null;
+const RequireAuth = ({ children }) => {
+  const auth = sessionStorage.getItem("name")
+    ? sessionStorage.getItem("name")
+    : null;
   const location = useLocation();
 
   return auth !== null ? (
-    <Outlet />
+    children
   ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
+    <Navigate to="/account/login" state={{ from: location.pathname }} replace />
   );
 };
 

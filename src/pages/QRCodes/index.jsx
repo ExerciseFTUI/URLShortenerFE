@@ -1,15 +1,15 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom"
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-import { ButtonLink } from "../../components/button"
+import { ButtonLink } from "../../components/button";
 
-import bgImage from "../../assets/backgrounds/hexa-history.png"
-import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
+import bgImage from "../../assets/backgrounds/hexa-history.png";
+import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png";
 
 function QRCodes() {
-  const place = useLocation().pathname.split("/")[2]
+  const place = useLocation().pathname.split("/")[2];
 
   if (!place) {
-    return <Navigate to="default" />
+    return <Navigate to="default" />;
   }
 
   return (
@@ -64,7 +64,7 @@ function QRCodes() {
         />
       </>
     </div>
-  )
+  );
 }
 
-export default QRCodes
+export default QRCodes;
