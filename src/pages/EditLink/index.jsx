@@ -160,7 +160,7 @@ function EditLinkPage() {
               >
                 <p className="font-medium text-lg mb-1">Preview</p>
                 <p className="bg-light outline-none border-b-2 border-dark-2 w-full py-1 px-4 text-lg">
-                  ex.tech/{shorts}
+                  exer.tech/{shorts}
                 </p>
               </motion.div>
             )}

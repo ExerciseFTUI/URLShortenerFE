@@ -16,7 +16,7 @@ function Sidebar() {
   const location = useLocation().pathname.split("/");
   const userName =
     sessionStorage.getItem("name") === null
-      ? "User User"
+      ? "User Guest"
       : sessionStorage.getItem("name");
   
   const profilePic = 
@@ -104,7 +104,7 @@ function Sidebar() {
           className="bg-light w-full py-2 rounded-md flex items-center justify-center border-b-2 gap-2 border-dark-2 relative z-[1]"
         >
           <img
-            alt=""
+            alt="profile picture"
             src={profilePic}
             className="w-8 h-8 rounded-full border-dark-2 border-2"
           />

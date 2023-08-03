@@ -113,7 +113,7 @@ const SummaryPage = () => {
         className="relative w-full px-6 pt-28 pb-36 shadow-grey-2 shadow-lg rounded-b-[30%] overflow-hidden"
       >
         <h1 className="font-bold text-center text-5xl md:text-7xl">
-          Welcome to <br /> <i>ex.tech</i>
+          Welcome to <br /> <i>exer.space</i>
         </h1>
 
         <HexaParticles
@@ -177,7 +177,7 @@ const SummaryPage = () => {
         </p>
 
         <QRCode
-          value="https://www.ex.tech/"
+          value="https://www.exer.space/"
           ecLevel="H"
           enableCORS
           size={196}
