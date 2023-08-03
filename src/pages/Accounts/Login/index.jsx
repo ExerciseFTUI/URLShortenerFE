@@ -14,7 +14,7 @@ function LoginPage() {
   }
 
   if (sessionStorage.getItem("error")) {
-    alert("Error: " + sessionStorage.getItem("error"));
+    alert(sessionStorage.getItem("error"));
     sessionStorage.removeItem("error");
   }
 
