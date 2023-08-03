@@ -6,6 +6,8 @@ const RequireAuth = ({ children }) => {
     : null;
   const location = useLocation();
 
+  sessionStorage.setItem("error", "Cookie Expired!! Please Login Again");
+
   return auth !== null ? (
     children
   ) : (

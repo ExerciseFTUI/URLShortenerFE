@@ -3,9 +3,43 @@ import { useNavigate } from "react-router";
 
 axios.defaults.withCredentials = true;
 
+const axiosPrivate = axios.create({
+  baseURL: import.meta.env.VITE_BASE_URL,
+});
+
+axiosPrivate.interceptors.request.use(
+  async (config) => {
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/auth/login/success`
+      );
+      if (!sessionStorage.getItem("name")) {
+        sessionStorage.setItem("userId", data.user._id);
+        sessionStorage.setItem("name", data.user.name);
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        sessionStorage.clear();
+        sessionStorage.setItem(
+          "error",
+          "Cookie Expired!! Please log in again."
+        );
+        window.open(`/login`, "_self");
+      }
+    }
+    return config;
+  },
+  (error) => {
+    console.log(error);
+    return Promise.reject(error);
+  }
+);
+
 export async function logout() {
   try {
-    await axios.get(`${import.meta.env.VITE_BASE_URL}/auth/logout`);
+    await axios.get(`${import.meta.env.VITE_BASE_URL}/auth/logout`, {
+      withCredentials: true,
+    });
     sessionStorage.clear();
   } catch (error) {
     console.error(error);
@@ -51,7 +85,7 @@ export async function apiAddQr(file, userId, url, title, customColor) {
   console.log(formData);
 
   // Call API
-  const { data } = await axios.post(
+  const { data } = await axiosPrivate.post(
     `${import.meta.env.VITE_BASE_URL}/qr/addQr`,
     formData,
     {

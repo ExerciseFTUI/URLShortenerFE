@@ -13,6 +13,11 @@ function LoginPage() {
     // navigate(from, { replace: true });
   }
 
+  if (sessionStorage.getItem("error")) {
+    alert("Error: " + sessionStorage.getItem("error"));
+    sessionStorage.removeItem("error");
+  }
+
   return (
     <div
       id="login-page"
