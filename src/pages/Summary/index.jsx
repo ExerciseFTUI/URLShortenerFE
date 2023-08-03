@@ -33,11 +33,11 @@ const SummaryPage = () => {
   const user = userQuery.data?.user;
 
   //After that get user qr codes
-  const qrQuery = useQuery({
-    queryKey: ["getQrByUser", userQuery.data?.user._id],
-    queryFn: () => apiGetQr(userQuery.data?.user._id),
-    enabled: !!userQuery,
-  });
+  // const qrQuery = useQuery({
+  //   queryKey: ["getQrByUser", userQuery.data?.user._id],
+  //   queryFn: () => apiGetQr(userQuery.data?.user._id),
+  //   enabled: !!userQuery,
+  // });
 
   //Shorten link request
   const mutation = useMutation({
@@ -79,7 +79,7 @@ const SummaryPage = () => {
   });
 
   //User Qr Codes
-  const userQr = qrQuery.data?.payload;
+  // const userQr = qrQuery.data?.payload;
 
   const handleGetURL = (e) => {
     e.preventDefault();
