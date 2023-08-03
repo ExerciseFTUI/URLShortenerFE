@@ -1,27 +1,33 @@
-import React from "react"
-import ReactDOM from "react-dom/client"
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
+import React from "react";
+import ReactDOM from "react-dom/client";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom";
 
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import "./main.css"
+import "./main.css";
 
-import App from "./App"
+import App from "./App";
 
-import LoginPage from "./pages/Accounts/Login"
-import FillData from "./pages/Accounts/FillData"
-import ResetPasswordPage from "./pages/Accounts/ResetPassword"
+import LoginPage from "./pages/Accounts/Login";
+import FillData from "./pages/Accounts/FillData";
+import ResetPasswordPage from "./pages/Accounts/ResetPassword";
 
-import QRCodes from "./pages/QRCodes"
-import CustomQR from "./pages/QRCodes/CustomQR"
-import DefaultQR from "./pages/QRCodes/DefaultQR"
+import QRCodes from "./pages/QRCodes";
+import CustomQR from "./pages/QRCodes/CustomQR";
+import DefaultQR from "./pages/QRCodes/DefaultQR";
 
-import Summary from "./pages/Summary"
+import Summary from "./pages/Summary";
 
-import EditLinkPage from "./pages/EditLink"
-import HistoryLinkPage from "./pages/HistoryLink"
-import URLShortenerPage from "./pages/URLShortener"
+import EditLinkPage from "./pages/EditLink";
+import HistoryLinkPage from "./pages/HistoryLink";
+import URLShortenerPage from "./pages/URLShortener";
+import RequireAuth from "./pages/AuthRoute/RequireAuth";
 
 const router = createBrowserRouter([
   {
@@ -34,7 +40,11 @@ const router = createBrowserRouter([
       },
       {
         path: "qr-codes",
-        element: <QRCodes />,
+        element: (
+          <RequireAuth>
+            <QRCodes />
+          </RequireAuth>
+        ),
         children: [
           {
             path: "default",
@@ -48,6 +58,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/url-shortener",
+        element: (
+          <RequireAuth>
+            <Outlet />
+          </RequireAuth>
+        ),
         children: [
           {
             path: "history",
@@ -86,9 +101,9 @@ const router = createBrowserRouter([
     path: "*",
     element: <Navigate to="/account/login" />,
   },
-])
+]);
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -97,4 +112,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </React.StrictMode>
-)
+);

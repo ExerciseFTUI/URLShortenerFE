@@ -1,36 +1,43 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query"
-import { toast, ToastContainer } from "react-toastify"
-import { QRCode } from "react-qrcode-logo"
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import { toast, ToastContainer } from "react-toastify";
+import { QRCode } from "react-qrcode-logo";
 
-import { apiGetQr, apiGetUserData, apiPostShorten } from "../../utils"
+import { apiGetQr, apiGetUserData, apiPostShorten } from "../../utils";
 
-import HexaParticles from "../../components/hexagonAnim/HexaParticles"
+import HexaParticles from "../../components/hexagonAnim/HexaParticles";
 
-import logo from "../../assets/exe-logo-with-bg.png"
+import logo from "../../assets/exe-logo-with-bg.png";
 
 const SummaryPage = () => {
-  const [link, setLink] = useState("")
-  const queryClient = useQueryClient()
+  //React Router
+  // const location = useLocation();
+  // // const from = location.state?.from || "/";
 
-  const navigate = useNavigate()
+  // // console.log(location);
+  // // console.log(from);
+
+  const [link, setLink] = useState("");
+  const queryClient = useQueryClient();
+
+  const navigate = useNavigate();
 
   //Get user data
   const userQuery = useQuery({
     queryKey: ["getUserData"],
     queryFn: () => apiGetUserData(),
-  })
+  });
 
   //User Data
-  const user = userQuery.data?.user
+  const user = userQuery.data?.user;
 
   //After that get user qr codes
-  const qrQuery = useQuery({
-    queryKey: ["getQrByUser", userQuery.data?.user._id],
-    queryFn: () => apiGetQr(userQuery.data?.user._id),
-    enabled: !!userQuery,
-  })
+  // const qrQuery = useQuery({
+  //   queryKey: ["getQrByUser", userQuery.data?.user._id],
+  //   queryFn: () => apiGetQr(userQuery.data?.user._id),
+  //   enabled: !!userQuery,
+  // });
 
   //Shorten link request
   const mutation = useMutation({
@@ -50,10 +57,10 @@ const SummaryPage = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-      })
+      });
       setTimeout(() => {
-        navigate("/url-shortener/history")
-      }, 1000)
+        navigate("/url-shortener/history");
+      }, 1000);
     },
     onError: (error) => {
       toast.warn("Failed to generate short url", {
@@ -65,30 +72,30 @@ const SummaryPage = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-      })
+      });
       // console.log(error);
-      setTimeout(() => {}, 3000)
+      setTimeout(() => {}, 3000);
     },
-  })
+  });
 
   //User Qr Codes
-  const userQr = qrQuery.data?.payload
+  // const userQr = qrQuery.data?.payload;
 
   const handleGetURL = (e) => {
-    e.preventDefault()
-    sessionStorage.setItem("tempLink", link)
-    const userId = sessionStorage.getItem("userId");
-    if(userId == null) return navigate("/login");
-    navigate("/url-shortener/create")
-  }
-
-  const handleKeyPress = e => {
-    //it triggers by pressing the enter key
-  if (e.key === 'Enter') {
     e.preventDefault();
-    handleGetURL(e);
-  }
-};
+    sessionStorage.setItem("tempLink", link);
+    const userId = sessionStorage.getItem("userId");
+    if (userId == null) return navigate("/login");
+    navigate("/url-shortener/create");
+  };
+
+  const handleKeyPress = (e) => {
+    //it triggers by pressing the enter key
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleGetURL(e);
+    }
+  };
 
   if (userQuery.isSuccess) {
     sessionStorage.setItem("userId", userQuery.data.user._id);
@@ -199,17 +206,17 @@ const SummaryPage = () => {
         theme="light"
       />
     </div>
-  )
-}
+  );
+};
 
-export default SummaryPage
+export default SummaryPage;
 
 function isValidUrl(urlString) {
-  let url
+  let url;
   try {
-    url = new URL(urlString)
+    url = new URL(urlString);
   } catch (e) {
-    return false
+    return false;
   }
-  return url.protocol === "http:" || url.protocol === "https:"
+  return url.protocol === "http:" || url.protocol === "https:";
 }
