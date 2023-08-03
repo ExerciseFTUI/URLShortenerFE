@@ -93,6 +93,7 @@ const SummaryPage = () => {
   if (userQuery.isSuccess) {
     sessionStorage.setItem("userId", userQuery.data.user._id);
     sessionStorage.setItem("name", userQuery.data.user.name);
+    sessionStorage.setItem("avatar", userQuery.data.user.avatar);
 
     //Check if user already fill the data
     !userQuery.data.user.fakultas && navigate("/account/fill-data");

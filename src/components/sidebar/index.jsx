@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import logo from "../../assets/exe-logo-with-bg.png";
 import { logout } from "../../utils";
@@ -12,14 +12,21 @@ const navs = [
 ];
 
 function Sidebar() {
+  const navigate = useNavigate();
   const location = useLocation().pathname.split("/");
   const userName =
     sessionStorage.getItem("name") === null
-      ? "Username"
+      ? "User User"
       : sessionStorage.getItem("name");
+  
+  const profilePic = 
+    sessionStorage.getItem("avatar") === null
+      ? logo
+      : sessionStorage.getItem("avatar");
 
   const [opened, setOpened] = useState(false);
   const [account, setAccount] = useState(false);
+
 
   function toggleSide() {
     setOpened(!opened);
@@ -27,6 +34,10 @@ function Sidebar() {
 
   function handleLogOut() {
     logout();
+  }
+
+  function handleLogin() {
+    navigate("/account/login");
   }
 
   return (
@@ -90,15 +101,15 @@ function Sidebar() {
           title="user"
           type="button"
           onClick={() => setAccount(!account)}
-          className="bg-light w-full px-[1.4rem] py-2 rounded-md flex items-center justify-between gap-2 border-b-2 border-dark-2 relative z-[1]"
+          className="bg-light w-full py-2 rounded-md flex items-center justify-center border-b-2 gap-2 border-dark-2 relative z-[1]"
         >
           <img
             alt=""
-            src={logo}
+            src={profilePic}
             className="w-8 h-8 rounded-full border-dark-2 border-2"
           />
 
-          <h1 className="text-dark-2 text-base overflow-hidden">
+          <h1 className="text-dark-2 text-base overflow-hidden line-clamp-1">
             {userName.split(" ")[1]}
           </h1>
         </button>
@@ -111,21 +122,27 @@ function Sidebar() {
               exit={{ scaleY: 0 }}
               className="text-dark-2 text-center flex flex-col justify-center items-center -mt-1 origin-top"
             >
-              <Link
-                to="/account"
-                className="bg-light w-full py-2 font-semibold border-b-2 border-dark-2 rounded-b-sm"
-              >
-                Account
-              </Link>
-
-              <button
-                title="log out"
-                type="button"
-                onClick={handleLogOut}
-                className="bg-light w-full py-2 font-semibold rounded-b-md"
-              >
-                Log Out
-              </button>
+              {
+                sessionStorage.getItem("name") === null ? (
+                  <button
+                    title="login"
+                    type="button"
+                    onClick={handleLogin}
+                    className="bg-light w-full py-2 font-semibold rounded-b-md"
+                  >
+                    Login
+                  </button>
+                ) : (
+                  <button
+                    title="log out"
+                    type="button"
+                    onClick={handleLogOut}
+                    className="bg-light w-full py-2 font-semibold rounded-b-md"
+                  >
+                    Log Out
+                  </button>
+                )
+              }
             </motion.div>
           )}
         </AnimatePresence>
