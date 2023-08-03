@@ -47,6 +47,7 @@ function RegisterPage() {
     } else {
       // POST data to database
       const userData = {
+        name: namaUser,
         fakultas: namaFakultas,
         jurusan: namaJurusan,
       };
