@@ -1,32 +1,40 @@
-import { AnimatePresence, motion } from "framer-motion"
-import { useEffect, useState } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
-import logo from "../../assets/exe-logo-with-bg.png"
+import logo from "../../assets/exe-logo-with-bg.png";
+import { logout } from "../../utils";
 
 const navs = [
   { text: "History Links", to: "/url-shortener/history", path: "history" },
   { text: "Custom Links", to: "/url-shortener/create", path: "create" },
   { text: "QR Codes", to: "/qr-codes/default", path: "qr-codes" },
-]
+];
 
 function Sidebar() {
-  const location = useLocation().pathname.split("/")
-  const userName = sessionStorage.getItem("name") === null ? "Username" : sessionStorage.getItem("name")
+  const location = useLocation().pathname.split("/");
+  const userName =
+    sessionStorage.getItem("name") === null
+      ? "Username"
+      : sessionStorage.getItem("name");
 
-  const [opened, setOpened] = useState(false)
-  const [account, setAccount] = useState(false)
+  const [opened, setOpened] = useState(false);
+  const [account, setAccount] = useState(false);
 
   function toggleSide() {
-    setOpened(!opened)
+    setOpened(!opened);
   }
 
-  function handleLogOut() {}
+  function handleLogOut() {
+    logout();
+  }
 
   return (
     <aside
       id="sidebar"
-      className={`bg-dark-1 text-lg fixed top-0 h-full px-8 py-16 flex flex-col justify-between z-20 border-grey-2 border-r-2 ease-in-out duration-500 ${opened ? "left-0" : "-left-[194px]"}`}
+      className={`bg-dark-1 text-lg fixed top-0 h-full px-8 py-16 flex flex-col justify-between z-20 border-grey-2 border-r-2 ease-in-out duration-500 ${
+        opened ? "left-0" : "-left-[194px]"
+      }`}
     >
       <div
         onClick={toggleSide}
@@ -41,7 +49,9 @@ function Sidebar() {
           height="2rem"
           width="2rem"
           xmlns="http://www.w3.org/2000/svg"
-          className={`ease-in-out duration-300 ${opened ? "rotate-0" : "rotate-180"}`}
+          className={`ease-in-out duration-300 ${
+            opened ? "rotate-0" : "rotate-180"
+          }`}
         >
           <path
             fillRule="evenodd"
@@ -64,7 +74,9 @@ function Sidebar() {
               <Link
                 onClick={toggleSide}
                 to={to}
-                className={`relative before:bg-light before:absolute before:bottom-2 before:h-0.5 ${location.includes(path)? "before:w-full" : "before:w-0"} before:ease-in-out before:duration-300 hover:before:w-full before:opacity-80`}
+                className={`relative before:bg-light before:absolute before:bottom-2 before:h-0.5 ${
+                  location.includes(path) ? "before:w-full" : "before:w-0"
+                } before:ease-in-out before:duration-300 hover:before:w-full before:opacity-80`}
               >
                 {text}
               </Link>
@@ -72,45 +84,54 @@ function Sidebar() {
           ))}
         </ul>
       </div>
-      
+
       <div className="pointer-events-auto w-32">
-        <button 
+        <button
           title="user"
           type="button"
           onClick={() => setAccount(!account)}
           className="bg-light w-full px-[1.4rem] py-2 rounded-md flex items-center justify-between gap-2 border-b-2 border-dark-2 relative z-[1]"
         >
-          <img alt="" src={logo} className="w-8 h-8 rounded-full border-dark-2 border-2" />
+          <img
+            alt=""
+            src={logo}
+            className="w-8 h-8 rounded-full border-dark-2 border-2"
+          />
 
-          <h1 className="text-dark-2 text-base overflow-hidden">{userName.split(' ')[1]}</h1>
+          <h1 className="text-dark-2 text-base overflow-hidden">
+            {userName.split(" ")[1]}
+          </h1>
         </button>
 
         <AnimatePresence>
-        { account &&   
+          {account && (
             <motion.div
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               exit={{ scaleY: 0 }}
               className="text-dark-2 text-center flex flex-col justify-center items-center -mt-1 origin-top"
             >
-            <Link to="/account" className="bg-light w-full py-2 font-semibold border-b-2 border-dark-2 rounded-b-sm">
+              <Link
+                to="/account"
+                className="bg-light w-full py-2 font-semibold border-b-2 border-dark-2 rounded-b-sm"
+              >
                 Account
-            </Link>
+              </Link>
 
-            <button 
-              title="log out" 
-              type="button"
-              onClick={handleLogOut} 
-              className="bg-light w-full py-2 font-semibold rounded-b-md"
-            >
+              <button
+                title="log out"
+                type="button"
+                onClick={handleLogOut}
+                className="bg-light w-full py-2 font-semibold rounded-b-md"
+              >
                 Log Out
-            </button>
-          </motion.div>
-        }
+              </button>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
     </aside>
-  )
+  );
 }
 
-export default Sidebar
+export default Sidebar;

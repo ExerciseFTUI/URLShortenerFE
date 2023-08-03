@@ -1,4 +1,17 @@
 import axios from "axios";
+import { useNavigate } from "react-router";
+
+axios.defaults.withCredentials = true;
+
+export async function logout() {
+  try {
+    await axios.get(`${import.meta.env.VITE_BASE_URL}/auth/logout`);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    window.open(`/login`, "_self");
+  }
+}
 
 export async function apiGetUserData() {
   const { data } = await axios.get(
@@ -63,12 +76,14 @@ export async function apiGetSingleQr(qr_id) {
 }
 
 export function apiGetAllLinks(user_id) {
-  return axios.get(`${import.meta.env.VITE_BASE_URL}/url/${user_id}`).then(res => res.data);
+  return axios
+    .get(`${import.meta.env.VITE_BASE_URL}/url/${user_id}`)
+    .then((res) => res.data);
 }
 
 export function apiPostShorten({ user_id, title, full_url, short_url }) {
-  if(!title){
-    title = "Title"
+  if (!title) {
+    title = "Title";
   }
   const data = {
     user_id: user_id,
@@ -96,9 +111,13 @@ export function apiPutShorten({ _id, title, full_url, short_url }) {
 }
 
 export function apiDeleteShorten(_id) {
-  return axios.delete(`${import.meta.env.VITE_BASE_URL}/delete/${_id}`).then(res => res.data);
+  return axios
+    .delete(`${import.meta.env.VITE_BASE_URL}/delete/${_id}`)
+    .then((res) => res.data);
 }
 
 export function apiSearchShorten(_id) {
-  return axios.get(`${import.meta.env.VITE_BASE_URL}/search/${_id}`).then(res => res.data);
+  return axios
+    .get(`${import.meta.env.VITE_BASE_URL}/search/${_id}`)
+    .then((res) => res.data);
 }
