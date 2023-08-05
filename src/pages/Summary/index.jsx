@@ -11,75 +11,15 @@ import HexaParticles from "../../components/hexagonAnim/HexaParticles";
 import logo from "../../assets/exe-logo-with-bg.png";
 
 const SummaryPage = () => {
-  //React Router
-  // const location = useLocation();
-  // // const from = location.state?.from || "/";
-
-  // // console.log(location);
-  // // console.log(from);
+  const navigate = useNavigate();
 
   const [link, setLink] = useState("");
-  const queryClient = useQueryClient();
-
-  const navigate = useNavigate();
 
   //Get user data
   const userQuery = useQuery({
     queryKey: ["getUserData"],
     queryFn: () => apiGetUserData(),
   });
-
-  //User Data
-  const user = userQuery.data?.user;
-
-  //After that get user qr codes
-  // const qrQuery = useQuery({
-  //   queryKey: ["getQrByUser", userQuery.data?.user._id],
-  //   queryFn: () => apiGetQr(userQuery.data?.user._id),
-  //   enabled: !!userQuery,
-  // });
-
-  //Shorten link request
-  const mutation = useMutation({
-    mutationFn: (params) =>
-      apiPostShorten({
-        user_id: params,
-        full_url: link,
-        short_url: "",
-      }),
-    onSuccess: () => {
-      toast.success("Your short url has been successfully generated", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      setTimeout(() => {
-        navigate("/url-shortener/history");
-      }, 1000);
-    },
-    onError: (error) => {
-      toast.warn("Failed to generate short url", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      // console.log(error);
-      setTimeout(() => {}, 3000);
-    },
-  });
-
-  //User Qr Codes
-  // const userQr = qrQuery.data?.payload;
 
   const handleGetURL = (e) => {
     e.preventDefault();
@@ -90,7 +30,6 @@ const SummaryPage = () => {
   };
 
   const handleKeyPress = (e) => {
-    //it triggers by pressing the enter key
     if (e.key === "Enter") {
       e.preventDefault();
       handleGetURL(e);
@@ -105,6 +44,7 @@ const SummaryPage = () => {
     //Check if user already fill the data
     // !userQuery.data.user.fakultas && navigate("/account/fill-data");
     const userFakultas = userQuery.data.user.fakultas;
+    console.log(userFakultas);
     if(userFakultas == null || userFakultas == "") navigate("/account/fill-data");
   }
 
@@ -212,13 +152,3 @@ const SummaryPage = () => {
 };
 
 export default SummaryPage;
-
-function isValidUrl(urlString) {
-  let url;
-  try {
-    url = new URL(urlString);
-  } catch (e) {
-    return false;
-  }
-  return url.protocol === "http:" || url.protocol === "https:";
-}

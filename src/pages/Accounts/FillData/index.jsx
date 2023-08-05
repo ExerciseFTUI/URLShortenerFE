@@ -60,6 +60,7 @@ function RegisterPage() {
     mutationFn: (userData) => apiUpdateUser(userId, userData),
     onSuccess: () => {
       sessionStorage.setItem("name", namaUser);
+      queryClient.invalidateQueries("getUserData");
       navigate("/");
     },
   });
