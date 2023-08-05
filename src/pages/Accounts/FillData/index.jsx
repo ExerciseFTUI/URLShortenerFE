@@ -59,7 +59,7 @@ function RegisterPage() {
   const mutation = useMutation({
     mutationFn: (userData) => apiUpdateUser(userId, userData),
     onSuccess: () => {
-      sessionStorage.setItem("nama", namaUser);
+      sessionStorage.setItem("name", namaUser);
       navigate("/");
     },
   });
