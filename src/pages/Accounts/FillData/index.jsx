@@ -47,6 +47,7 @@ function RegisterPage() {
     } else {
       // POST data to database
       const userData = {
+        name: namaUser,
         fakultas: namaFakultas,
         jurusan: namaJurusan,
       };
@@ -58,6 +59,7 @@ function RegisterPage() {
   const mutation = useMutation({
     mutationFn: (userData) => apiUpdateUser(userId, userData),
     onSuccess: () => {
+      sessionStorage.setItem("nama", namaUser);
       navigate("/");
     },
   });

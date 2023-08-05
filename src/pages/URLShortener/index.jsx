@@ -187,7 +187,7 @@ function URLShortenerPage() {
             <p className="font-medium text-lg">
               Try our QR Code feature!{" "}
               <span>
-                <Link to="/qr-code/default" className="underline">
+                <Link to="/qr-codes/default" className="underline">
                   Get Here
                 </Link>
               </span>

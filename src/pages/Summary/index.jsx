@@ -103,7 +103,9 @@ const SummaryPage = () => {
     sessionStorage.setItem("avatar", userQuery.data.user.avatar);
 
     //Check if user already fill the data
-    !userQuery.data.user.fakultas && navigate("/account/fill-data");
+    // !userQuery.data.user.fakultas && navigate("/account/fill-data");
+    const userFakultas = userQuery.data.user.fakultas;
+    if(userFakultas == null || userFakultas == "") navigate("/account/fill-data");
   }
 
   return (
