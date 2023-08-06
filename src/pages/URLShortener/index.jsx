@@ -29,7 +29,6 @@ function URLShortenerPage() {
   const location = useLocation();
 
   const chars ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const [randomChars, setRandomChars] = useState("")
 
   const getRandomCustom = (length) => {
     let result = "";

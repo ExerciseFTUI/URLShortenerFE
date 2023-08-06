@@ -40,16 +40,6 @@ function Sidebar() {
     navigate("/account/login");
   }
 
-  useEffect(() => {
-    try {
-      setUserName(nameStrg.split(" ")[1])
-    } catch {
-      console.log()
-    }
-
-    if (!userName) setUserName("Namasaya")
-  }, [nameStrg])
-
   return (
     <aside
       id="sidebar"
