@@ -1,36 +1,37 @@
-import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { AnimatePresence, motion } from "framer-motion"
-import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 
-import { ButtonLink } from "../../components/button/"
+import { ButtonLink } from "../../components/button/";
 
-import bgImage from "../../assets/backgrounds/hexa-history.png"
-import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
-import QRInput from "../QRCodes/QRInput"
+import bgImage from "../../assets/backgrounds/hexa-history.png";
+import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png";
+import QRInput from "../QRCodes/QRInput";
 
-import { apiPutShorten, apiSearchShorten } from "../../utils"
-import { useMutation } from "@tanstack/react-query"
-import { ToastContainer, toast } from "react-toastify"
-import HexaBorder from "../../components/hexagonAnim/HexaBorder"
+import { apiPutShorten, apiSearchShorten } from "../../utils";
+import { useMutation } from "@tanstack/react-query";
+import { ToastContainer, toast } from "react-toastify";
+import HexaBorder from "../../components/hexagonAnim/HexaBorder";
 
 function EditLinkPage() {
-  const LINK_ID = useLocation().pathname.split("/")[3]
-  const navigate = useNavigate()
+  const LINK_ID = useLocation().pathname.split("/")[3];
+  const navigate = useNavigate();
 
-  const [shorts, setShorts] = useState("")
-  const [destinationLink, setDestinationLink] = useState("")
-  const [title, setTitle] = useState("")
+  const [shorts, setShorts] = useState("");
+  const [destinationLink, setDestinationLink] = useState("");
+  const [title, setTitle] = useState("");
+  const [error, setError] = useState(false);
 
   const queries = useQuery({
     queryKey: ["getUrl", LINK_ID],
     queryFn: () => apiSearchShorten(LINK_ID),
     onSuccess: (data) => {
-      setShorts(data.results.short)
-      setDestinationLink(data.results.full)
-      setTitle(data.results.title)
-    }
-  })
+      setShorts(data.results.short);
+      setDestinationLink(data.results.full);
+      setTitle(data.results.title);
+    },
+  });
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -50,30 +51,37 @@ function EditLinkPage() {
         draggable: true,
         progress: undefined,
         theme: "light",
-      })
+      });
       setTimeout(() => {
-        navigate("/url-shortener/history")
-      }, 1000)
+        navigate("/url-shortener/history");
+      }, 1000);
     },
     onError: (error) => {
-      toast.warn("Failed to generate short url", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-      setTimeout(() => {}, 3000)
+      setError(false); //To prevent toast bug
+      toast.warn(
+        `${
+          error.response.data.error
+            ? error.response.data.error
+            : "Failed to generate short url"
+        }`,
+        {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }
+      );
     },
-  })
+  });
 
   const updateLink = () => {
     if (destinationLink != "" && shorts != "") {
       if (isValidUrl(destinationLink)) {
-        mutation.mutate()
+        mutation.mutate();
       } else {
         toast.warn("Please fill in the form", {
           position: "bottom-center",
@@ -84,11 +92,11 @@ function EditLinkPage() {
           draggable: true,
           progress: undefined,
           theme: "light",
-        })
+        });
       }
     } else {
       if (shorts.length > 3) {
-        mutation.mutate()
+        mutation.mutate();
       } else {
         toast.warn("Invalid custom link", {
           position: "bottom-center",
@@ -99,13 +107,13 @@ function EditLinkPage() {
           draggable: true,
           progress: undefined,
           theme: "light",
-        })
+        });
       }
     }
-  }
+  };
 
   if (queries.isError) {
-    return <div>{JSON.stringify(queries.error)}</div>
+    return <div>{JSON.stringify(queries.error)}</div>;
   }
 
   return (
@@ -182,8 +190,8 @@ function EditLinkPage() {
               Confirm
             </button>
           </div>
-        </form>)}
-      
+        </form>
+      )}
 
       <>
         <img
@@ -212,17 +220,17 @@ function EditLinkPage() {
         theme="light"
       />
     </div>
-  )
+  );
 }
 
-export default EditLinkPage
+export default EditLinkPage;
 
 function isValidUrl(urlString) {
-  let url
+  let url;
   try {
-    url = new URL(urlString)
+    url = new URL(urlString);
   } catch (e) {
-    return false
+    return false;
   }
-  return url.protocol === "http:" || url.protocol === "https:"
+  return url.protocol === "http:" || url.protocol === "https:";
 }

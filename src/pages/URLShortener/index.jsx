@@ -1,40 +1,40 @@
-import { useState, useEffect } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom"
-import { AnimatePresence, motion } from "framer-motion"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { ToastContainer, toast } from "react-toastify"
-import { QRCode } from "react-qrcode-logo"
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ToastContainer, toast } from "react-toastify";
+import { QRCode } from "react-qrcode-logo";
 
-import { apiPostShorten } from "../../utils"
+import { apiPostShorten } from "../../utils";
 
-import QRInput from "../QRCodes/QRInput"
+import QRInput from "../QRCodes/QRInput";
 
-import logo from "../../assets/exe-logo-with-bg.png"
-import bgImage from "../../assets/backgrounds/hexa-history.png"
-import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
+import logo from "../../assets/exe-logo-with-bg.png";
+import bgImage from "../../assets/backgrounds/hexa-history.png";
+import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png";
 
 function URLShortenerPage() {
-  const [destinationLink, setDestinationLink] = useState("")
-  const [title, setTitle] = useState("")
-  const [custom, setCustom] = useState("")
+  const [destinationLink, setDestinationLink] = useState("");
+  const [title, setTitle] = useState("");
+  const [custom, setCustom] = useState("");
 
-  const [tryQR, setTryQR] = useState(false)
+  const [tryQR, setTryQR] = useState(false);
 
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const userId = sessionStorage.getItem("userId")
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const userId = sessionStorage.getItem("userId");
 
-  const tempLink = sessionStorage.getItem("tempLink")
+  const tempLink = sessionStorage.getItem("tempLink");
 
-  const location = useLocation()
-
-  useEffect(() => {
-    if (tempLink) setDestinationLink(tempLink)
-  }, [tempLink])
+  const location = useLocation();
 
   useEffect(() => {
-    sessionStorage.removeItem("tempLink")
-  }, [location])
+    if (tempLink) setDestinationLink(tempLink);
+  }, [tempLink]);
+
+  useEffect(() => {
+    sessionStorage.removeItem("tempLink");
+  }, [location]);
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -55,33 +55,41 @@ function URLShortenerPage() {
         draggable: true,
         progress: undefined,
         theme: "light",
-      })
+      });
 
-      setTryQR(true)
+      setTryQR(true);
       //   setTimeout(() => {
       //     navigate("/url-shortener/history")
       //   }, 1000)
     },
     onError: (error) => {
-      toast.warn("Failed to generate short url", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-      setTimeout(() => {}, 3000)
+      setTryQR(false); //Solving toast auto close bug
+
+      toast.warn(
+        `${
+          error.response.data.error
+            ? error.response.data.error
+            : "Failed to generate short url"
+        }`,
+        {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }
+      );
     },
-  })
+  });
 
   const shortenLink = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (isValidUrl(destinationLink)) {
-      mutation.mutate()
+      mutation.mutate();
     } else {
       toast.warn("Invalid destination url", {
         position: "bottom-center",
@@ -92,9 +100,9 @@ function URLShortenerPage() {
         draggable: true,
         progress: undefined,
         theme: "light",
-      })
+      });
     }
-  }
+  };
 
   return (
     <div
@@ -231,17 +239,17 @@ function URLShortenerPage() {
         theme="light"
       />
     </div>
-  )
+  );
 }
 
-export default URLShortenerPage
+export default URLShortenerPage;
 
 function isValidUrl(urlString) {
-  let url
+  let url;
   try {
-    url = new URL(urlString)
+    url = new URL(urlString);
   } catch (e) {
-    return false
+    return false;
   }
-  return url.protocol === "http:" || url.protocol === "https:"
+  return url.protocol === "http:" || url.protocol === "https:";
 }
