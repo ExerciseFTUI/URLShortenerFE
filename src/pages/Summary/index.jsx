@@ -45,7 +45,8 @@ const SummaryPage = () => {
     // !userQuery.data.user.fakultas && navigate("/account/fill-data");
     const userFakultas = userQuery.data.user.fakultas;
     console.log(userFakultas);
-    if(userFakultas == null || userFakultas == "") navigate("/account/fill-data");
+    if (userFakultas == null || userFakultas == "")
+      navigate("/account/fill-data");
   }
 
   return (

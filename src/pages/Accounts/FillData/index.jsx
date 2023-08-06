@@ -7,13 +7,19 @@ import HexaParticles from "../../../components/hexagonAnim/HexaParticles";
 
 import fakultas from "../../../assets/data/list-fakultas";
 import ButtonGoogle from "../../../components/button/ButtonGoogle";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiUpdateUser } from "../../../utils";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiGetUserData, apiUpdateUser } from "../../../utils";
 
 function RegisterPage() {
   const queryClient = useQueryClient();
   const userId = sessionStorage.getItem("userId");
   const navigate = useNavigate();
+
+  //Get user data
+  const userQuery = useQuery({
+    queryKey: ["getUserData"],
+    queryFn: () => apiGetUserData(),
+  });
 
   const fakultasOpt = fakultas.map(({ nama }) => ({
     value: nama,
@@ -38,6 +44,12 @@ function RegisterPage() {
   const jurusanChange = ({ value }) => {
     setNamaJurusan(value);
   };
+
+  if (userQuery.isSuccess) {
+    sessionStorage.setItem("userId", userQuery.data.user._id);
+    sessionStorage.setItem("name", userQuery.data.user.name);
+    sessionStorage.setItem("avatar", userQuery.data.user.avatar);
+  }
 
   const loginGoogle = (e) => {
     e.preventDefault();
