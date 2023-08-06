@@ -1,35 +1,43 @@
-import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { AnimatePresence, motion } from "framer-motion"
-import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 
-import { ButtonLink } from "../../components/button/"
+import { ButtonLink } from "../../components/button/";
 
-import bgImage from "../../assets/backgrounds/hexa-history.png"
-import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
-import QRInput from "../QRCodes/QRInput"
+import bgImage from "../../assets/backgrounds/hexa-history.png";
+import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png";
+import QRInput from "../QRCodes/QRInput";
 
-import { apiGetAllLinks, apiPutShorten } from "../../utils"
-import { useMutation } from "@tanstack/react-query"
-import { ToastContainer, toast } from "react-toastify"
-import HexaBorder from "../../components/hexagonAnim/HexaBorder"
+import { apiPutShorten, apiSearchShorten } from "../../utils";
+import { useMutation } from "@tanstack/react-query";
+import { ToastContainer, toast } from "react-toastify";
+import HexaBorder from "../../components/hexagonAnim/HexaBorder";
 
 function EditLinkPage() {
-  const LINK_ID = useLocation().pathname.split("/")[3]
-  const navigate = useNavigate()
+  const LINK_ID = useLocation().pathname.split("/")[3];
+  const navigate = useNavigate();
 
-  const [shorts, setShorts] = useState("")
-  const [destinationLink, setDestinationLink] = useState("")
-  const [title, setTitle] = useState("")
+  const [shorts, setShorts] = useState("");
+  const [destinationLink, setDestinationLink] = useState("");
+  const [title, setTitle] = useState("");
+  const [error, setError] = useState(false);
 
-  const queries = useQuery({ queryKey: [], queryFn: () => "" })
-
-  const changedLink = queries.data
+  const queries = useQuery({
+    queryKey: ["getUrl", LINK_ID],
+    queryFn: () => apiSearchShorten(LINK_ID),
+    onSuccess: (data) => {
+      setShorts(data.results.short);
+      setDestinationLink(data.results.full);
+      setTitle(data.results.title);
+    },
+  });
 
   const mutation = useMutation({
     mutationFn: () =>
       apiPutShorten({
         _id: LINK_ID,
+        title: title,
         full_url: destinationLink,
         short_url: shorts,
       }),
@@ -43,30 +51,37 @@ function EditLinkPage() {
         draggable: true,
         progress: undefined,
         theme: "light",
-      })
+      });
       setTimeout(() => {
-        navigate("/url-shortener/history")
-      }, 1000)
+        navigate("/url-shortener/history");
+      }, 1000);
     },
     onError: (error) => {
-      toast.warn("Failed to generate short url", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-      setTimeout(() => {}, 3000)
+      setError(false); //To prevent toast bug
+      toast.warn(
+        `${
+          error.response.data.error
+            ? error.response.data.error
+            : "Failed to generate short url"
+        }`,
+        {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }
+      );
     },
-  })
+  });
 
   const updateLink = () => {
     if (destinationLink != "" && shorts != "") {
       if (isValidUrl(destinationLink)) {
-        mutation.mutate()
+        mutation.mutate();
       } else {
         toast.warn("Please fill in the form", {
           position: "bottom-center",
@@ -77,11 +92,11 @@ function EditLinkPage() {
           draggable: true,
           progress: undefined,
           theme: "light",
-        })
+        });
       }
     } else {
       if (shorts.length > 3) {
-        mutation.mutate()
+        mutation.mutate();
       } else {
         toast.warn("Invalid custom link", {
           position: "bottom-center",
@@ -92,19 +107,13 @@ function EditLinkPage() {
           draggable: true,
           progress: undefined,
           theme: "light",
-        })
+        });
       }
     }
-  }
-
-  useEffect(() => {
-    setShorts(changedLink.short)
-    setDestinationLink(changedLink.full)
-    setTitle(changedLink.title)
-  }, [changedLink])
+  };
 
   if (queries.isError) {
-    return <div>{JSON.stringify(queries.error)}</div>
+    return <div>{JSON.stringify(queries.error)}</div>;
   }
 
   return (
@@ -129,6 +138,7 @@ function EditLinkPage() {
             required={true}
             name="Custom Link"
             className="w-full mb-6"
+            maxLength={16}
           />
 
           <QRInput
@@ -138,7 +148,6 @@ function EditLinkPage() {
             className="w-full mb-6"
             name="Destination Link"
             required={true}
-            maxLength={16}
           />
 
           <QRInput
@@ -159,7 +168,7 @@ function EditLinkPage() {
               >
                 <p className="font-medium text-lg mb-1">Preview</p>
                 <p className="bg-light outline-none border-b-2 border-dark-2 w-full py-1 px-4 text-lg">
-                  ex.tech/{shorts}
+                  exer.tech/{shorts}
                 </p>
               </motion.div>
             )}
@@ -211,17 +220,17 @@ function EditLinkPage() {
         theme="light"
       />
     </div>
-  )
+  );
 }
 
-export default EditLinkPage
+export default EditLinkPage;
 
 function isValidUrl(urlString) {
-  let url
+  let url;
   try {
-    url = new URL(urlString)
+    url = new URL(urlString);
   } catch (e) {
-    return false
+    return false;
   }
-  return url.protocol === "http:" || url.protocol === "https:"
+  return url.protocol === "http:" || url.protocol === "https:";
 }

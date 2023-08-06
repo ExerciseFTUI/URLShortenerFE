@@ -38,9 +38,6 @@ function CustomQR() {
         QRColor //Custom Color field
       ),
     onSuccess: () => {
-      //Refetch
-      queryClient.invalidateQueries(["getQrByUser", userId]);
-
       //Reset states value
       // setTitle("");
       // setLink("");
@@ -48,10 +45,12 @@ function CustomQR() {
       // setBgColor("");
 
       setErrorMessage("");
-      //Download Qr
-      download();
       //Display Toast
       toast.success("Your QR Code has been successfully generated");
+      //Download Qr
+      download();
+      //Refetch
+      queryClient.invalidateQueries(["getQrByUser", userId]);
     },
     onError: (error) => {
       setErrorMessage(error.response.data.message);

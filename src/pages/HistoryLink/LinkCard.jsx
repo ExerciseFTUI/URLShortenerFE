@@ -31,7 +31,7 @@ function LinkCard({ link, handleDelete }) {
   }
 
   function handleCopy() {
-    navigator.clipboard.writeText("ex.tech/" + link.short)
+    navigator.clipboard.writeText("exer.space/" + link.short)
 
     toast.success("Short URL has been copied to the clipboard!", {
       position: "top-center",
@@ -137,7 +137,7 @@ function LinkCard({ link, handleDelete }) {
         rel="noopener noreferrer"
         className="text-sm overflow-clip"
       >
-        Short : <span className="underline">ex.tech/{link.short}</span>
+        Short : <span className="underline">exer.space/{link.short}</span>
       </a>
 
       <Link to={link.full} className="text-sm overflow-clip">

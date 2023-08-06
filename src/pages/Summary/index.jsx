@@ -1,84 +1,51 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query"
-import { toast, ToastContainer } from "react-toastify"
-import { QRCode } from "react-qrcode-logo"
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import { toast, ToastContainer } from "react-toastify";
+import { QRCode } from "react-qrcode-logo";
 
-import { apiGetQr, apiGetUserData, apiPostShorten } from "../../utils"
+import { apiGetQr, apiGetUserData, apiPostShorten } from "../../utils";
 
-import HexaParticles from "../../components/hexagonAnim/HexaParticles"
+import HexaParticles from "../../components/hexagonAnim/HexaParticles";
 
-import logo from "../../assets/exe-logo-with-bg.png"
+import logo from "../../assets/exe-logo-with-bg.png";
 
 const SummaryPage = () => {
-  const [link, setLink] = useState("")
-  const queryClient = useQueryClient()
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
+  const [link, setLink] = useState("");
 
   //Get user data
   const userQuery = useQuery({
     queryKey: ["getUserData"],
     queryFn: () => apiGetUserData(),
-  })
-
-  //User Data
-  const user = userQuery.data?.user
-
-  //After that get user qr codes
-  const qrQuery = useQuery({
-    queryKey: ["getQrByUser", userQuery.data?.user._id],
-    queryFn: () => apiGetQr(userQuery.data?.user._id),
-    enabled: !!userQuery,
-  })
-
-  //Shorten link request
-  const mutation = useMutation({
-    mutationFn: (params) =>
-      apiPostShorten({
-        user_id: params,
-        full_url: link,
-        short_url: "",
-      }),
-    onSuccess: () => {
-      toast.success("Your short url has been successfully generated", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-      setTimeout(() => {
-        navigate("/url-shortener/history")
-      }, 1000)
-    },
-    onError: (error) => {
-      toast.warn("Failed to generate short url", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-      // console.log(error);
-      setTimeout(() => {}, 3000)
-    },
-  })
-
-  //User Qr Codes
-  const userQr = qrQuery.data?.payload
+  });
 
   const handleGetURL = (e) => {
-    e.preventDefault()
-    sessionStorage.setItem("tempLink", link)
+    e.preventDefault();
+    sessionStorage.setItem("tempLink", link);
+    const userId = sessionStorage.getItem("userId");
+    if (userId == null) return navigate("/login");
+    navigate("/url-shortener/create");
+  };
 
-    navigate("/url-shortener/create")
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleGetURL(e);
+    }
+  };
+
+  if (userQuery.isSuccess) {
+    sessionStorage.setItem("userId", userQuery.data.user._id);
+    sessionStorage.setItem("name", userQuery.data.user.name);
+    sessionStorage.setItem("avatar", userQuery.data.user.avatar);
+
+    //Check if user already fill the data
+    // !userQuery.data.user.fakultas && navigate("/account/fill-data");
+    const userFakultas = userQuery.data.user.fakultas;
+    console.log(userFakultas);
+    if(userFakultas == null || userFakultas == "") navigate("/account/fill-data");
   }
 
   return (
@@ -88,7 +55,7 @@ const SummaryPage = () => {
         className="relative w-full px-6 pt-28 pb-36 shadow-grey-2 shadow-lg rounded-b-[30%] overflow-hidden"
       >
         <h1 className="font-bold text-center text-5xl md:text-7xl">
-          Welcome to <br /> <i>ex.tech</i>
+          Welcome to <br /> <i>exer.space</i>
         </h1>
 
         <HexaParticles
@@ -119,6 +86,7 @@ const SummaryPage = () => {
             required
             value={link}
             onChange={(e) => setLink(e.target.value)}
+            onKeyDown={handleKeyPress}
             className="bg-light text-dark outline-none rounded-l-lg w-full h-24 pl-6"
           />
 
@@ -151,7 +119,7 @@ const SummaryPage = () => {
         </p>
 
         <QRCode
-          value="https://www.ex.tech/"
+          value="https://www.exer.space/"
           ecLevel="H"
           enableCORS
           size={196}
@@ -180,17 +148,7 @@ const SummaryPage = () => {
         theme="light"
       />
     </div>
-  )
-}
+  );
+};
 
-export default SummaryPage
-
-function isValidUrl(urlString) {
-  let url
-  try {
-    url = new URL(urlString)
-  } catch (e) {
-    return false
-  }
-  return url.protocol === "http:" || url.protocol === "https:"
-}
+export default SummaryPage;

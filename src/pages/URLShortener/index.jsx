@@ -1,32 +1,32 @@
-import { useState, useEffect } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom"
-import { AnimatePresence, motion } from "framer-motion"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { ToastContainer, toast } from "react-toastify"
-import { QRCode } from "react-qrcode-logo"
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ToastContainer, toast } from "react-toastify";
+import { QRCode } from "react-qrcode-logo";
 
-import { apiPostShorten } from "../../utils"
+import { apiPostShorten } from "../../utils";
 
-import QRInput from "../QRCodes/QRInput"
+import QRInput from "../QRCodes/QRInput";
 
-import logo from "../../assets/exe-logo-with-bg.png"
-import bgImage from "../../assets/backgrounds/hexa-history.png"
-import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
+import logo from "../../assets/exe-logo-with-bg.png";
+import bgImage from "../../assets/backgrounds/hexa-history.png";
+import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png";
 
 function URLShortenerPage() {
-  const [destinationLink, setDestinationLink] = useState("")
-  const [title, setTitle] = useState("")
-  const [custom, setCustom] = useState("")
+  const [destinationLink, setDestinationLink] = useState("");
+  const [title, setTitle] = useState("");
+  const [custom, setCustom] = useState("");
 
-  const [tryQR, setTryQR] = useState(false)
+  const [tryQR, setTryQR] = useState(false);
 
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const userId = sessionStorage.getItem("userId")
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const userId = sessionStorage.getItem("userId");
 
-  const tempLink = sessionStorage.getItem("tempLink")
+  const tempLink = sessionStorage.getItem("tempLink");
 
-  const location = useLocation()
+  const location = useLocation();
 
   const chars ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const [randomChars, setRandomChars] = useState("")
@@ -41,20 +41,21 @@ function URLShortenerPage() {
 
   useEffect(() => {
     if (tempLink){
-      setDestinationLink(tempLink)
+      setDestinationLink(tempLink);
 
       setCustom(getRandomCustom(5))
     }
-  }, [tempLink])
+  }, [tempLink]);
 
   useEffect(() => {
-    sessionStorage.removeItem("tempLink")
-  }, [location])
+    sessionStorage.removeItem("tempLink");
+  }, [location]);
 
   const mutation = useMutation({
     mutationFn: () =>
       apiPostShorten({
         user_id: userId,
+        title: title,
         full_url: destinationLink,
         short_url: custom,
       }),
@@ -69,33 +70,41 @@ function URLShortenerPage() {
         draggable: true,
         progress: undefined,
         theme: "light",
-      })
+      });
 
-      setTryQR(true)
+      setTryQR(true);
       //   setTimeout(() => {
       //     navigate("/url-shortener/history")
       //   }, 1000)
     },
     onError: (error) => {
-      toast.warn("Failed to generate short url", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-      setTimeout(() => {}, 3000)
+      setTryQR(false); //Solving toast auto close bug
+
+      toast.warn(
+        `${
+          error.response.data.error
+            ? error.response.data.error
+            : "Failed to generate short url"
+        }`,
+        {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        }
+      );
     },
-  })
+  });
 
   const shortenLink = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (isValidUrl(destinationLink)) {
-      mutation.mutate()
+      mutation.mutate();
     } else {
       toast.warn("Invalid destination url", {
         position: "bottom-center",
@@ -106,9 +115,9 @@ function URLShortenerPage() {
         draggable: true,
         progress: undefined,
         theme: "light",
-      })
+      });
     }
-  }
+  };
 
   return (
     <div
@@ -158,7 +167,7 @@ function URLShortenerPage() {
             >
               <p className="font-medium text-lg mb-1">Preview</p>
               <p className="bg-light outline-none border-b-2 border-dark-2 w-full py-1 px-4 text-lg">
-                ex.tech/{custom}
+                exer.space/{custom}
               </p>
             </motion.div>
           )}
@@ -188,7 +197,7 @@ function URLShortenerPage() {
             </p>
 
             <QRCode
-              value="https://www.ex.tech/"
+              value="https://www.exer.space/"
               ecLevel="H"
               enableCORS
               size={196}
@@ -202,7 +211,7 @@ function URLShortenerPage() {
             <p className="font-medium text-lg">
               Try our QR Code feature!{" "}
               <span>
-                <Link to="/qr-code/default" className="underline">
+                <Link to="/qr-codes/default" className="underline">
                   Get Here
                 </Link>
               </span>
@@ -210,7 +219,7 @@ function URLShortenerPage() {
 
             <button
               title="close"
-              onClick={() => setTryQR(false)}
+              onClick={() => navigate("/url-shortener/history")}
               className="absolute top-2 right-2 underline text-sm italic"
             >
               close
@@ -246,17 +255,17 @@ function URLShortenerPage() {
         theme="light"
       />
     </div>
-  )
+  );
 }
 
-export default URLShortenerPage
+export default URLShortenerPage;
 
 function isValidUrl(urlString) {
-  let url
+  let url;
   try {
-    url = new URL(urlString)
+    url = new URL(urlString);
   } catch (e) {
-    return false
+    return false;
   }
-  return url.protocol === "http:" || url.protocol === "https:"
+  return url.protocol === "http:" || url.protocol === "https:";
 }

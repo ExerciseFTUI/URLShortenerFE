@@ -25,8 +25,6 @@ export const QrCodeContextProvider = ({ children }) => {
       }
     }
 
-    console.log(formData);
-
     // Call API
     const { data } = await axios.post(
       `${import.meta.env.VITE_BASE_URL}/qr/addQr`,
