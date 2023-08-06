@@ -28,6 +28,7 @@ import EditLinkPage from "./pages/EditLink";
 import HistoryLinkPage from "./pages/HistoryLink";
 import URLShortenerPage from "./pages/URLShortener";
 import RequireAuth from "./pages/AuthRoute/RequireAuth";
+import NotFoundPage from "./components/not-found/NotFoundPage";
 
 const router = createBrowserRouter([
   {
@@ -96,6 +97,10 @@ const router = createBrowserRouter([
         element: <ResetPasswordPage />,
       },
     ],
+  },
+  {
+    path: "/404-notfound",
+    element: <NotFoundPage />
   },
   {
     path: "*",
