@@ -99,12 +99,12 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/404-notfound",
+    path: "/not-found",
     element: <NotFoundPage />
   },
   {
     path: "*",
-    element: <Navigate to="/account/login" />,
+    element: <Navigate to="/summary" />,
   },
 ]);
 
