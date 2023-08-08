@@ -19,10 +19,10 @@ function Sidebar() {
       ? "User Guest"
       : sessionStorage.getItem("name");
   
-  const profilePic = 
+  const [profilePic, setProfilePic] = useState(
     sessionStorage.getItem("avatar") === null
       ? logo
-      : sessionStorage.getItem("avatar");
+      : sessionStorage.getItem("avatar"));
 
   const [opened, setOpened] = useState(false);
   const [account, setAccount] = useState(false);
