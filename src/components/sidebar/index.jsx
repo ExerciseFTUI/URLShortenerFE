@@ -29,6 +29,10 @@ function Sidebar() {
 
 
   function toggleSide() {
+    const storedAvatar = sessionStorage.getItem("avatar");
+    if (storedAvatar !== null) {
+      setProfilePic(storedAvatar);
+    }
     setOpened(!opened);
   }
 
