@@ -28,8 +28,22 @@ function URLShortenerPage() {
 
   const location = useLocation();
 
+  const chars ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  const getRandomCustom = (length) => {
+    let result = "";
+    for ( let i = 0; i < length; i++ ) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result
+  }
+
   useEffect(() => {
-    if (tempLink) setDestinationLink(tempLink);
+    if (tempLink){
+      setDestinationLink(tempLink);
+
+      setCustom(getRandomCustom(5))
+    }
   }, [tempLink]);
 
   useEffect(() => {
@@ -117,6 +131,7 @@ function URLShortenerPage() {
         <QRInput
           placeholder="Destination link here"
           value={destinationLink}
+          type="url"
           onChange={setDestinationLink}
           required={true}
           name="Link"
