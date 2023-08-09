@@ -29,6 +29,7 @@ import HistoryLinkPage from "./pages/HistoryLink";
 import URLShortenerPage from "./pages/URLShortener";
 import RequireAuth from "./pages/AuthRoute/RequireAuth";
 import NotFoundPage from "./components/not-found/NotFoundPage";
+import HistoryQr from "./pages/HistoryQr";
 
 const router = createBrowserRouter([
   {
@@ -97,6 +98,10 @@ const router = createBrowserRouter([
         element: <ResetPasswordPage />,
       },
     ],
+  },
+  {
+    path: "/history-qr",
+    element: <HistoryQr />
   },
   {
     path: "/not-found",
