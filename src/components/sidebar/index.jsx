@@ -7,6 +7,7 @@ import { logout } from "../../utils";
 
 const navs = [
   { text: "History Links", to: "/url-shortener/history", path: "history" },
+  { text: "History QR", to: "/history-qr", path: "" },
   { text: "Custom Links", to: "/url-shortener/create", path: "create" },
   { text: "QR Codes", to: "/qr-codes/default", path: "qr-codes" },
 ];
