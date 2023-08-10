@@ -200,7 +200,7 @@ function Sidebar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="bg-light bg-opacity-10 w-screen h-screen flex-center text-center"
+            className="bg-opacity-10 w-screen h-screen flex-center text-center absolute left-0 top-0 z-20 backdrop-blur-sm"
           >
             <HexaBorder duration={2.5} theme="dark" className="w-16" />
           </motion.div>
