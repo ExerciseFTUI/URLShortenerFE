@@ -37,8 +37,9 @@ axiosPrivate.interceptors.request.use(
   }
 );
 
-export async function logout() {
+export async function logout(setLoading) {
   try {
+    setLoading(true)
     await axios.get(`${import.meta.env.VITE_BASE_URL}/auth/logout`, {
       withCredentials: true,
     });
@@ -46,6 +47,7 @@ export async function logout() {
   } catch (error) {
     console.error(error);
   } finally {
+    setLoading(false)
     window.open(`/login`, "_self");
   }
 }
