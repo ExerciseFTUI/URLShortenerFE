@@ -1,54 +1,54 @@
-import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ToastContainer, toast } from "react-toastify";
-import { QRCode } from "react-qrcode-logo";
+import { useState, useEffect } from "react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import { AnimatePresence, motion } from "framer-motion"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { ToastContainer, toast } from "react-toastify"
+import { QRCode } from "react-qrcode-logo"
 
-import { apiPostShorten } from "../../utils";
+import { apiPostShorten } from "../../utils"
 
-import QRInput from "../QRCodes/QRInput";
+import QRInput from "../QRCodes/QRInput"
 
-import logo from "../../assets/exe-logo-with-bg.png";
-import bgImage from "../../assets/backgrounds/hexa-history.png";
-import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png";
+import logo from "../../assets/exe-logo-with-bg.png"
+import bgImage from "../../assets/backgrounds/hexa-history.png"
+import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
 
 function URLShortenerPage() {
-  const [destinationLink, setDestinationLink] = useState("");
-  const [title, setTitle] = useState("");
-  const [custom, setCustom] = useState("");
+  const [destinationLink, setDestinationLink] = useState("")
+  const [title, setTitle] = useState("")
+  const [custom, setCustom] = useState("")
 
-  const [tryQR, setTryQR] = useState(false);
+  const [tryQR, setTryQR] = useState(false)
 
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const userId = sessionStorage.getItem("userId");
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const userId = sessionStorage.getItem("userId")
 
-  const tempLink = sessionStorage.getItem("tempLink");
+  const tempLink = sessionStorage.getItem("tempLink")
 
-  const location = useLocation();
+  const location = useLocation()
 
-  const chars ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
   const getRandomCustom = (length) => {
-    let result = "";
-    for ( let i = 0; i < length; i++ ) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    let result = ""
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length))
     }
     return result
   }
 
   useEffect(() => {
-    if (tempLink){
-      setDestinationLink(tempLink);
+    if (tempLink) {
+      setDestinationLink(tempLink)
 
       setCustom(getRandomCustom(5))
     }
-  }, [tempLink]);
+  }, [tempLink])
 
   useEffect(() => {
-    sessionStorage.removeItem("tempLink");
-  }, [location]);
+    sessionStorage.removeItem("tempLink")
+  }, [location])
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -69,15 +69,15 @@ function URLShortenerPage() {
         draggable: true,
         progress: undefined,
         theme: "light",
-      });
+      })
 
-      setTryQR(true);
+      setTryQR(true)
       //   setTimeout(() => {
       //     navigate("/url-shortener/history")
       //   }, 1000)
     },
     onError: (error) => {
-      setTryQR(false); //Solving toast auto close bug
+      setTryQR(false) //Solving toast auto close bug
 
       toast.warn(
         `${
@@ -95,15 +95,15 @@ function URLShortenerPage() {
           progress: undefined,
           theme: "light",
         }
-      );
+      )
     },
-  });
+  })
 
   const shortenLink = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (isValidUrl(destinationLink)) {
-      mutation.mutate();
+      mutation.mutate()
     } else {
       toast.warn("Invalid destination url", {
         position: "bottom-center",
@@ -114,9 +114,9 @@ function URLShortenerPage() {
         draggable: true,
         progress: undefined,
         theme: "light",
-      });
+      })
     }
-  };
+  }
 
   return (
     <div
@@ -189,40 +189,42 @@ function URLShortenerPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="bg-light flex-center gap-4 absolute top-1/4 z-10 p-12 border-dark-2 border-2 rounded-md drop-shadow-lg shadow-xl shadow-dark"
+            className="w-full h-full absolute top-0 left-0 z-10 flex-center backdrop-blur-sm"
           >
-            <p className="font-medium text-lg">
-              Want to make the link into a QR Code?
-            </p>
+            <div className="bg-light flex-center gap-4 p-12 border-dark-2 border-2 rounded-md drop-shadow-lg shadow-xl shadow-dark">
+              <p className="font-medium text-lg">
+                Want to make the link into a QR Code?
+              </p>
 
-            <QRCode
-              value="https://www.exer.space/"
-              ecLevel="H"
-              enableCORS
-              size={196}
-              logoImage={logo}
-              logoPadding={2}
-              fgColor="#1C465C"
-              removeQrCodeBehindLogo
-              id="landing-qr-code"
-            />
+              <QRCode
+                value="https://www.exer.space/"
+                ecLevel="H"
+                enableCORS
+                size={196}
+                logoImage={logo}
+                logoPadding={2}
+                fgColor="#1C465C"
+                removeQrCodeBehindLogo
+                id="landing-qr-code"
+              />
 
-            <p className="font-medium text-lg">
-              Try our QR Code feature!{" "}
-              <span>
-                <Link to="/qr-codes/default" className="underline">
-                  Get Here
-                </Link>
-              </span>
-            </p>
+              <p className="font-medium text-lg">
+                Try our QR Code feature!{" "}
+                <span>
+                  <Link to="/qr-codes/default" className="underline">
+                    Get Here
+                  </Link>
+                </span>
+              </p>
 
-            <button
-              title="close"
-              onClick={() => navigate("/url-shortener/history")}
-              className="absolute top-2 right-2 underline text-sm italic"
-            >
-              close
-            </button>
+              <button
+                title="close"
+                onClick={() => navigate("/url-shortener/history")}
+                className="absolute top-2 right-2 underline text-sm italic"
+              >
+                close
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -254,17 +256,17 @@ function URLShortenerPage() {
         theme="light"
       />
     </div>
-  );
+  )
 }
 
-export default URLShortenerPage;
+export default URLShortenerPage
 
 function isValidUrl(urlString) {
-  let url;
+  let url
   try {
-    url = new URL(urlString);
+    url = new URL(urlString)
   } catch (e) {
-    return false;
+    return false
   }
-  return url.protocol === "http:" || url.protocol === "https:";
+  return url.protocol === "http:" || url.protocol === "https:"
 }

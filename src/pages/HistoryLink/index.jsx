@@ -124,7 +124,7 @@ function HistoryLinkPage() {
             ) 
             : postQuery.data.results.length > 0 ? 
             (
-              postQuery.data.results.map((link, i) => <LinkCard key={i} link={link} handleDelete={handleDelete} />)
+              postQuery.data.results.map((link, i) => <LinkCard key={i} link={link} userId={userId} />)
             ) : 
             (
               <motion.div
