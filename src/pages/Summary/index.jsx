@@ -25,7 +25,6 @@ const SummaryPage = () => {
     e.preventDefault();
     sessionStorage.setItem("tempLink", link);
     const userId = sessionStorage.getItem("userId");
-    if (userId == null) return navigate("/login");
     navigate("/url-shortener/create");
   };
 
@@ -95,7 +94,7 @@ const SummaryPage = () => {
             type="button"
             name="submit-summary-shortener"
             title="submit-summary-shortener"
-            onClick={handleGetURL}
+            onClick={navigate("/url-shortener/create")}
             className="btn-light text-dark border-dark border-l-2 rounded-r-lg text-lg md:whitespace-nowrap md:px-3 md:text-xl"
           >
             Get URL
