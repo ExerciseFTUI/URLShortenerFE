@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState,  } from "react";
+import { useNavigate } from "react-router-dom"
 import { QRCode } from "react-qrcode-logo";
 import { saveAs } from "file-saver";
 
@@ -14,7 +15,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function DefaultQR() {
-  const queryClient = useQueryClient();
+  const navigate = useNavigate()
 
   const [link, setLink] = useState("");
   const [title, setTitle] = useState("");
@@ -32,13 +33,15 @@ function DefaultQR() {
         null //Custom Color field didnt exist
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries(["getQrByUser", userId]);
       // setTitle("");
       // setLink("");
       setErrorMessage("");
       //Download Qr
       download();
       toast.success("Your QR Code has been successfully generated");
+      setTimeout(() => {
+            navigate("/qr-codes/history-qr")
+      }, 2500)
     },
     onError: (error) => {
       setErrorMessage(error.response.data.message);

@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { ToastContainer, toast } from "react-toastify"
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 
-import { apiDeleteShorten, apiGetAllLinks } from "../../utils"
+import { apiGetQr } from "../../utils"
 
 import { ButtonLink } from "../../components/button/"
 import LinkCard from "./QrCard"
@@ -12,36 +12,17 @@ import HexaBorder from "../../components/hexagonAnim/HexaBorder"
 import bgImage from "../../assets/backgrounds/hexa-history.png"
 import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
 
-const tempData = [
-    {
-        _id: "614a64ca2d9c1bfa65dc8aca0388",
-        userId: "64ca2a0fc0b7b315977d8a94",
-        url: "https://www.github.com",
-        shortUrl: "Hn1x24v",
-        qrLogo: "https://res.cloudinary.com/drqkbrgsu/image/upload/v1690971548/urlshort…",
-        title:"Github",
-        customColor: "#000000",
-    },
-    {
-        _id:"64ccfb1828e0a1cd9547af7b",
-        userId: "64cca12dc4c8e0ff88db7970",
-        url: "https://docs.google.com/spreadsheets/d/1TqL0jiISVoRaD5oFwqH0QCAwyZIhQl…",
-        shortUrl: "tf8KIvS",
-        qrLogo: "https://res.cloudinary.com/drqkbrgsu/image/upload/v1691155223/urlshort…",
-        title: "Bug Tracker",
-        customColor: "#173a69",
-    }
-]
-
 const currentlyLoading = false
 
 function HistoryQr() {
-  const queryClient = useQueryClient()
   const userId = sessionStorage.getItem("userId")
 
-  const handleDelete = async (params) => {
-    // TODO: delete
-  }
+  const postQuery = useQuery({
+    queryKey: ["getAllQr", userId],
+    queryFn: () => apiGetQr(userId),
+  })
+
+  if (postQuery.isError) return <h1>{JSON.stringify(postQuery.error)}</h1>
 
   return (
     <div
@@ -74,14 +55,14 @@ function HistoryQr() {
           className="relative z-[1] mt-8 w-full flex items-start justify-start flex-wrap gap-4 overflow-y-auto pb-4 md:pb-4 px-4 md:px-12"
           style={{
             height:
-            currentlyLoading || tempData.length == 0
+            postQuery.isLoading || postQuery.data.payload.length == 0
                 ? "100%"
                 : "auto",
           }}
         >
           {/* prettier-ignore */}
           <AnimatePresence >
-            {currentlyLoading ? 
+            {postQuery.isLoading ? 
             (
               <motion.div 
                 initial={{opacity: 0}}
@@ -92,9 +73,9 @@ function HistoryQr() {
                 <HexaBorder duration={2.5} theme="dark" className="w-12" />
               </motion.div>
             ) 
-            : tempData.length > 0 ? 
+            : postQuery.data.payload.length > 0 ? 
             (
-              tempData.map((link, i) => <LinkCard key={i} link={link} handleDelete={handleDelete} />)
+              postQuery.data.payload.map((link, i) => <LinkCard key={i} link={link} userId={userId} />)
             ) : 
             (
               <motion.div
@@ -104,15 +85,15 @@ function HistoryQr() {
                 className="bg-light w-full md:h-full flex-center rounded-md p-4 text-center"
               >
                 <h1 className="text-dark-2 text-xl md:text-3xl mb-4">
-                  Shorten your links today!
+                  Create your own qr codes today!
                 </h1>
 
                 <ButtonLink
                   theme="dark"
-                  title="Create your first link"
+                  title="Create your first qr code"
                   width="fit"
                   className="px-2 rounded-lg text-base md:text-lg"
-                  to="/url-shortener/create"
+                  to="/qr-codes/default"
                 />
               </motion.div>
             )}

@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom"
 import { QRCode } from "react-qrcode-logo";
 import { saveAs } from "file-saver";
 
@@ -25,7 +26,8 @@ function CustomQR() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const queryClient = useQueryClient();
+  const navigate = useNavigate()
+
   const userId = sessionStorage.getItem("userId");
 
   const mutation = useMutation({
@@ -38,19 +40,13 @@ function CustomQR() {
         QRColor //Custom Color field
       ),
     onSuccess: () => {
-      //Reset states value
-      // setTitle("");
-      // setLink("");
-      // setQRColor("");
-      // setBgColor("");
-
       setErrorMessage("");
-      //Display Toast
       toast.success("Your QR Code has been successfully generated");
       //Download Qr
       download();
-      //Refetch
-      queryClient.invalidateQueries(["getQrByUser", userId]);
+      setTimeout(() => {
+        navigate("/qr-codes/history-qr")
+      }, 2500)
     },
     onError: (error) => {
       setErrorMessage(error.response.data.message);

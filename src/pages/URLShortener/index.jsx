@@ -70,11 +70,8 @@ function URLShortenerPage() {
         progress: undefined,
         theme: "light",
       })
-
       setTryQR(true)
-      //   setTimeout(() => {
-      //     navigate("/url-shortener/history")
-      //   }, 1000)
+      queryClient.invalidateQueries(["getAllLinks", userId]);
     },
     onError: (error) => {
       setTryQR(false) //Solving toast auto close bug

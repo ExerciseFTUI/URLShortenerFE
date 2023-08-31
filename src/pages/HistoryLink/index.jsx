@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { ToastContainer, toast } from "react-toastify"
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 
-import { apiDeleteShorten, apiGetAllLinks } from "../../utils"
+import { apiGetAllLinks } from "../../utils"
 
 import { ButtonLink } from "../../components/button/"
 import LinkCard from "./LinkCard"
@@ -13,63 +13,12 @@ import bgImage from "../../assets/backgrounds/hexa-history.png"
 import bgImageMb from "../../assets/backgrounds/hexa-history-mb.png"
 
 function HistoryLinkPage() {
-  const queryClient = useQueryClient()
   const userId = sessionStorage.getItem("userId")
 
   const postQuery = useQuery({
     queryKey: ["getAllLinks", userId],
     queryFn: () => apiGetAllLinks(userId),
   })
-
-  const postMutation = useMutation((params) => apiDeleteShorten(params), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["getAllLinks", userId])
-      toast.success("Short url successfully deleted", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-    },
-  })
-
-  const mutation = useMutation({
-    mutationFn: (params) => apiDeleteShorten(params),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["getAllLinks", userId])
-      toast.success("Short url successfully deleted", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-    },
-    onError: (error) => {
-      toast.warn("Failed to delete short url", {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-    },
-  })
-
-  const handleDelete = async (params) => {
-    console.log(params)
-    mutation.mutate(params)
-  }
 
   if (postQuery.isError) return <h1>{JSON.stringify(postQuery.error)}</h1>
 

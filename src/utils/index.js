@@ -115,13 +115,19 @@ export async function apiGetSingleQr(qr_id) {
     .then((res) => res.data);
 }
 
+export async function apiDeleteQr(_id) {
+  return axiosPrivate
+    .delete(`${import.meta.env.VITE_BASE_URL}/qr/deleteQr/${_id}`)
+    .then((res) => res.data);
+}
+
 export function apiGetAllLinks(user_id) {
   return axiosPrivate
     .get(`${import.meta.env.VITE_BASE_URL}/url/${user_id}`)
     .then((res) => res.data);
 }
 
-export function apiPostShorten({ user_id, title, full_url, short_url }) {
+export async function apiPostShorten({ user_id, title, full_url, short_url }) {
   const data = {
     user_id: user_id,
     title: title,
@@ -134,7 +140,7 @@ export function apiPostShorten({ user_id, title, full_url, short_url }) {
     .then((res) => res.data);
 }
 
-export function apiPutShorten({ _id, title, full_url, short_url }) {
+export async function apiPutShorten({ _id, title, full_url, short_url }) {
   const data = {
     _id: _id,
     title: title,
@@ -147,13 +153,13 @@ export function apiPutShorten({ _id, title, full_url, short_url }) {
     .then((res) => res.data);
 }
 
-export function apiDeleteShorten(_id) {
+export async function apiDeleteShorten(_id) {
   return axiosPrivate
     .delete(`${import.meta.env.VITE_BASE_URL}/delete/${_id}`)
     .then((res) => res.data);
 }
 
-export function apiSearchShorten(_id) {
+export async function apiSearchShorten(_id) {
   return axiosPrivate
     .get(`${import.meta.env.VITE_BASE_URL}/search/${_id}`)
     .then((res) => res.data);

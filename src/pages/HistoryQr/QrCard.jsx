@@ -2,39 +2,57 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { toast } from "react-toastify"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { ButtonLink } from "../../components/button"
 import { QRCode } from "react-qrcode-logo";
 
-function QrCard({ link, handleDelete }) {
+import { apiDeleteQr } from "../../utils"
+
+import { ButtonLink } from "../../components/button"
+import HexaBorder from "../../components/hexagonAnim/HexaBorder"
+
+function QrCard({ link, userId }) {
+  const queryClient = useQueryClient()
   const [isWantToDelete, setIsWantToDelete] = useState(false)
 
-  function formatDate(inputDate) {
-    const date = new Date(inputDate)
-    const jakartaTimeZone = "Asia/Jakarta"
+  const { isLoading, mutate } = useMutation({
+    mutationFn: (params) => apiDeleteQr(params),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["getAllQr", userId])
+      toast.success("QR code successfully deleted", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      })
+    },
+    onError: (error) => {
+      toast.warn("Failed to delete QR code", {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      })
+    },
+  })
 
-    const formattedDateTime = date.toLocaleString("en-US", {
-      timeZone: jakartaTimeZone,
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    })
-
-    return formattedDateTime
-  }
-
-  function deleteLink() {
-    handleDelete(link._id)
+  async function deleteLink() {
     setIsWantToDelete(false)
+    mutate(link._id)
   }
 
   function handleCopy() {
-    navigator.clipboard.writeText("exer.space/" + link.shortUrl)
+    navigator.clipboard.writeText(link.url)
 
-    toast.success("Short URL has been copied to the clipboard!", {
+    toast.success("URL has been copied to the clipboard!", {
       position: "top-center",
       autoClose: 300,
       hideProgressBar: true,
@@ -53,6 +71,12 @@ function QrCard({ link, handleDelete }) {
       exit={{ opacity: 0 }}
       className="bg-light text-dark-2 h-fit min-w-[310px] max-w-sm px-4 py-3 flex flex-1 flex-col rounded-md overflow-hidden ease-in-out duration-200 relative"
     >
+      {isLoading ? (
+        <div className="w-full h-[114px] flex-center flex-row">
+          <HexaBorder duration={2.5} theme="dark" className="w-12" />
+        </div>
+      ) : (
+        <>
       <div className="flex justify-between">
         <h1 className="text-xl">{link.title || "Title"}</h1>
 
@@ -132,17 +156,8 @@ function QrCard({ link, handleDelete }) {
         </div>
       </div>
 
-      <a
-        href={`${import.meta.env.VITE_BASE_URL}/${link.shortUrl}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-sm overflow-clip"
-      >
-        Short : <span className="underline">exer.space/{link.shortUrl}</span>
-      </a>
-
       <Link to={link.full} className="text-sm overflow-clip">
-        Full <span className="ml-3.5">:</span>{" "}
+        Full URL<span className="ml-1">:</span>{" "}
         <span className="underline">{link.url}</span>
       </Link>
 
@@ -158,6 +173,8 @@ function QrCard({ link, handleDelete }) {
               id={link._id}
             />
       </div>
+      </>
+      )}
     </motion.div>
   )
 }
