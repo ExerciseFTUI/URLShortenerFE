@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { toast } from "react-toastify"
 
 import { ButtonLink } from "../../components/button"
+import { QRCode } from "react-qrcode-logo";
 
 function QrCard({ link, handleDelete }) {
   const [isWantToDelete, setIsWantToDelete] = useState(false)
@@ -31,7 +32,7 @@ function QrCard({ link, handleDelete }) {
   }
 
   function handleCopy() {
-    navigator.clipboard.writeText("exer.space/" + link.short)
+    navigator.clipboard.writeText("exer.space/" + link.shortUrl)
 
     toast.success("Short URL has been copied to the clipboard!", {
       position: "top-center",
@@ -132,7 +133,7 @@ function QrCard({ link, handleDelete }) {
       </div>
 
       <a
-        href={`${import.meta.env.VITE_BASE_URL}/${link.short}`}
+        href={`${import.meta.env.VITE_BASE_URL}/${link.shortUrl}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-sm overflow-clip"
@@ -145,19 +146,17 @@ function QrCard({ link, handleDelete }) {
         <span className="underline">{link.url}</span>
       </Link>
 
-      <p className="font-light text-xs mt-1.5">Clicked : {link.clicks}</p>
-
-      <div className="flex justify-between">
-        <p className="font-light text-xs mt-1.5">
-          {formatDate(link.created_at)}
-        </p>
-
-        <ButtonLink
-          theme="dark"
-          title="Edit"
-          to={`/url-shortener/edit-link/${link._id}`}
-          className="text-sm py-0.5 px-2"
-        />
+      <div className="flex justify-center">
+        <QRCode
+              value={link.url}
+              ecLevel="H"
+              enableCORS
+              size={256}
+              logoImage={link.qrLogo}
+              logoPadding={2}
+              removeQrCodeBehindLogo
+              id={link._id}
+            />
       </div>
     </motion.div>
   )

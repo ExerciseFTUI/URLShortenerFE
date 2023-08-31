@@ -50,13 +50,13 @@ function HistoryQr() {
     >
       <div className="bg-dark-2 h-full rounded-md flex flex-col">
         <div className="relative z-[1] pt-4 md:pt-12 px-4 md:px-12">
-          <h1 className="text-3xl">My Links</h1>
+          <h1 className="text-3xl">My QR Codes</h1>
 
           <div className="w-fit flex items-end gap-4">
-            <p className="h-fit">Create new custom shorten link</p>
+            <p className="h-fit">Create new qr codes</p>
 
             <Link
-              to="/url-shortener/create"
+              to="/qr-codes/default"
               className="text-2xl h-fit -mb-0.5 hover:scale-125 ease-in-out duration-150"
             >
               +

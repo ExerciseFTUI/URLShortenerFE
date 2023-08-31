@@ -59,6 +59,10 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "qr-codes/history-qr",
+        element: <HistoryQr />
+      },
+      {
         path: "/url-shortener",
         element: (
           <RequireAuth>
@@ -98,10 +102,6 @@ const router = createBrowserRouter([
         element: <ResetPasswordPage />,
       },
     ],
-  },
-  {
-    path: "/history-qr",
-    element: <HistoryQr />
   },
   {
     path: "/not-found",
