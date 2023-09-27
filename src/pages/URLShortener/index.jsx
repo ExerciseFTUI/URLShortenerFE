@@ -163,7 +163,7 @@ function URLShortenerPage() {
             >
               <p className="font-medium text-lg mb-1">Preview</p>
               <p className="bg-light outline-none border-b-2 border-dark-2 w-full py-1 px-4 text-lg">
-                exer.space/{custom}
+                {import.meta.env.VITE_BASE_URL+"/"+custom}
               </p>
             </motion.div>
           )}
@@ -194,7 +194,7 @@ function URLShortenerPage() {
               </p>
 
               <QRCode
-                value="https://www.exer.space/"
+                value={"https://www." + import.meta.env.VITE_BASE_URL+"/"}
                 ecLevel="H"
                 enableCORS
                 size={196}
