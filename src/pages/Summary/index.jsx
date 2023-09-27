@@ -120,7 +120,7 @@ const SummaryPage = () => {
         </p>
 
         <QRCode
-          value={"https://www."+import.meta.env.VITE_BASE_URL+"/"}
+          value={`https://www.${import.meta.env.VITE_BASE_URL}/`}
           ecLevel="H"
           enableCORS
           size={196}

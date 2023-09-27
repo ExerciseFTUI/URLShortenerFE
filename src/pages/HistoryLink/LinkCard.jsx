@@ -49,7 +49,7 @@ function LinkCard({ link, userId }) {
   }
 
   function handleCopy() {
-    navigator.clipboard.writeText(import.meta.env.VITE_BASE_URL + link.short)
+    navigator.clipboard.writeText(`${import.meta.env.VITE_BASE_URL}/${link.short}`)
 
     toast.success("Short URL has been copied to the clipboard!", {
       position: "top-center",
@@ -178,7 +178,7 @@ function LinkCard({ link, userId }) {
             rel="noopener noreferrer"
             className="text-sm overflow-clip"
           >
-            Short : <span className="underline">{import.meta.env.VITE_BASE_URL}/{link.short}</span>
+            Short : <span className="underline">{`${import.meta.env.VITE_BASE_URL}/${link.short}`}</span>
           </a>
 
           <Link
